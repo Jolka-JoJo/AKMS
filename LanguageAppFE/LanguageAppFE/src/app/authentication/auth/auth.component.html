@@ -1,0 +1,93 @@
+<div class="auth-forms">
+  <div class = "registration-form">
+    <mat-card class="registration-card">
+      <mat-card-content class = "registration-form-content">
+        <h2>Registracija</h2>
+        <div *ngIf="registrationErrorMessage.length > 0" class="alert alert-danger" role="alert">
+          <div *ngFor="let error of registrationErrorMessage">
+            <span >{{error}}</span>
+          </div>
+        </div>
+        <div class="alert alert-success" *ngIf="successRegister" role="alert">
+          <span>Registracija sėkminga. Prisijunkite</span>
+        </div>
+        <form [formGroup]="registerForm" autocomplete="off" (ngSubmit)="registerUser(registerForm.value, formDirective)" #formDirective="ngForm">
+          <div >
+            <mat-form-field class="registration-form-field full-width">
+              <mat-label>Vardas</mat-label>
+              <input matInput formControlName="firstName" type="text" placeholder="Vardas" required>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="registration-form-field full-width">
+              <mat-label>Pavardė</mat-label>
+              <input  matInput formControlName="lastName" type="text" placeholder="Pavardė" required>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="registration-form-field full-width">
+              <mat-label>El. paštas</mat-label>
+              <input  matInput formControlName="email" type="email" placeholder="El. paštas" required>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="registration-form-field full-width">
+              <mat-label>Vartotojas</mat-label>
+              <mat-select formControlName="role">
+                <mat-option *ngFor="let role of roleTypes | keyvalue" [value]="role.key">
+                  {{role.value}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div>
+            <mat-form-field class="registration-form-field full-width">
+              <mat-label>Slaptažodis</mat-label>
+              <input  matInput formControlName="password" type="password" placeholder="Slaptažodis" required>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="registration-form-field full-width">
+              <mat-label>Patvirtinti slaptažodį</mat-label>
+              <input  matInput formControlName="confirm" type="password" placeholder="Patvirtinti slaptažodį" required>
+            </mat-form-field>
+          </div>
+          <div class="registration-form-button">
+            <button type="submit"  [disabled]="!registerForm.valid" mat-raised-button color="primary">Registruotis</button>
+          </div>
+        </form>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class = "login-form">
+    <mat-card class="login-card">
+      <mat-card-content class = "login-form-content">
+        <h2>Prisijungimas</h2>
+        <form [formGroup]="loginForm!" autocomplete="off" (ngSubmit)="loginUser(loginForm!.value)">
+          <div *ngIf="loginError" class="alert alert-danger" role="alert">
+            <span>{{loginError}}</span>
+          </div>
+          <div class="mb-3 row">
+              <div>
+                <mat-form-field class="registration-form-field full-width">
+                  <mat-label>El. paštas</mat-label>
+                  <input matInput formControlName="username" type="email" placeholder="El. paštas" required>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field class="registration-form-field full-width">
+                  <mat-label>Slaptažodis</mat-label>
+                  <input  matInput formControlName="password" type="password" placeholder="Slaptažodis" required>
+                </mat-form-field>
+              </div>
+          </div>
+          <div class="registration-form-button">
+            <button type="submit"  [disabled]="!loginForm!.valid" mat-raised-button color="primary">Prisijungti</button>
+          </div>
+      </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

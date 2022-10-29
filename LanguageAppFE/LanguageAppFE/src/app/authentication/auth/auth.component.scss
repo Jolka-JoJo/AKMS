@@ -1,0 +1,18 @@
+.auth-forms{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  .login-form, .registration-form{
+    min-width: 400px;
+    margin: auto 10px;
+  }
+  .registration-form-field, .login-form-field{
+    width: 100%;
+  }
+  .registration-form-button, .login-form-button{
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+

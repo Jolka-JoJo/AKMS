@@ -1,0 +1,120 @@
+
+  <div class = "task-main">
+    <div>
+      <div class = "task-form">
+        <mat-card class="task-card">
+          <mat-card-content class = "task-form-content">
+            <form [formGroup]="taskAddingForm" (ngSubmit)="onSubmit()" >
+              <div >
+                <mat-form-field class="task-form-field full-width">
+                  <mat-label>Užduoties pavadinimas</mat-label>
+                  <input matInput formControlName="taskTitle" type="text" placeholder="Užduoties pavadinimas"  name="taskTilte" required>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field class="task-form-field full-width">
+                  <mat-label>Užduotis</mat-label>
+                  <input  matInput formControlName="taskContent" type="text" placeholder="Užduotis" name="task">
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field class="task-form-field full-width">
+                  <mat-label>Užduoties tipas</mat-label>
+                  <mat-select formControlName="taskType">
+                    <mat-option *ngFor="let type of taskTypes | keyvalue" [value]="type.key">
+                      {{type.value}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field class="task-form-field full-width">
+                  <mat-label>Užduoties failas</mat-label>
+                  <ngx-mat-file-input matInput placeholder="Užduoties failas"  name="file" (change)="onFileChange($event)"></ngx-mat-file-input>
+
+                </mat-form-field>
+              </div>
+              <div class="task-form-button">
+                <button type="submit" mat-raised-button color="primary">Pridėti</button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-card  class="task-card">
+        <mat-card-content>
+          <div class="all-task-table">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Nr</th>
+                  <th scope="col">Užduoties pavadinimas</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let task of lesssonTasks; let i = index">
+
+                      <th scope="row"> {{ i + 1 }} </th>
+                      <td>{{ task.taskTitle }}</td>
+                      <td >
+                        <div class="task-table-actions">
+                        <div class="task-table-action">
+                        <a mat-list-item [routerLink]="'/tasks/' + task.taskId  +'/'">  <mat-icon >visibility</mat-icon> </a>
+
+                       </div>
+                       <!-- <div class="task-table-action">
+                        <a mat-list-item [routerLink]="'/'"> <mat-icon  (click)="selectUpdate(task)">edit</mat-icon> </a>
+                       </div> -->
+                       <div class="task-table-action">
+                        <a mat-list-item secondary><mat-icon  (click)="onDelete(task.taskId!)">delete</mat-icon></a>
+                       </div>
+                        </div>
+                      </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <!-- <div class="container">
+    <div class="card m-5 p-3">
+        <div class="card-body">
+            <table class="table table-bordered table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone number</th>
+                    <th>Address</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let task of lesssonTasks; let i = index">
+                  <th scope="row"> {{ i + 1 }} </th>
+                  <td>{{ task.taskTitle }}</td>
+                  <td >
+                    <div class="task-table-actions">
+                    <div class="task-table-action">
+                    <a mat-list-item [routerLink]="'/tasks/' + task.taskId  +'/'">  <mat-icon >visibility</mat-icon> </a>
+
+                   </div>
+                   <div class="task-table-action">
+                    <a mat-list-item [routerLink]="'/'"> <mat-icon  (click)="selectUpdate(task)">edit</mat-icon> </a>
+                   </div>
+                   <div class="task-table-action">
+                    <a mat-list-item secondary><mat-icon  (click)="onDelete(task.taskId!)">delete</mat-icon></a>
+                   </div>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div> -->

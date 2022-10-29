@@ -1,0 +1,134 @@
+<div class = "task-view-content">
+
+
+    <div class = "task-form">
+      <mat-card class="task-card-content">
+        <mat-card-content class = "task-form-content">
+          <div class = "task-title-row">
+            <h2>{{ task ? task.taskTitle : ""}}</h2>
+            <div class="task-table-actions">
+              <div class="task-table-action">
+              <a mat-list-item> <mat-icon (click)="updateOpen()" class = "task-card-edit">edit</mat-icon> </a>
+              </div>
+              <div class="task-table-action">
+              <a mat-list-item><mat-icon  (click)="onDelete(task.taskId!)">delete</mat-icon></a>
+              </div>
+            </div>
+          </div>
+          <div class="pre-task-content">
+
+            <div class="task-content">
+              <div>
+                <h3>{{task ? task.taskContent : ""}}</h3>
+              </div>
+              <div *ngIf="task && task.taskImage">
+                <img src="/assets/uploads/{{filename}}">
+                <!-- <pdf-viewer [src]="filename!" [render-text]="true" style="display: block;">
+                </pdf-viewer> -->
+              </div>
+              <div class = "answer-list">
+                <div>
+                  <div class = "answer-list-row" *ngFor="let answer of answers">
+                    <div class="answer-text-isCorrect">
+                      <mat-icon class = "correct" *ngIf="answer.isCorrect">check</mat-icon>
+                      <mat-icon class = "incorrect" *ngIf="!answer.isCorrect">close</mat-icon>
+                      <span class = "answer-list-text">
+                        {{answer.AnswerContent}}
+                      </span>
+                    </div>
+                    <div class="answer-actions">
+                      <div class="answer-action">
+                      <a mat-list-item> <mat-icon (click)="editAnswer(answer)" class = "task-card-edit">edit</mat-icon> </a>
+                      </div>
+                      <div class="answer-action">
+                      <a mat-list-item><mat-icon  (click)="deleteAnswer(answer.answerId)">delete</mat-icon></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="displayAnswerForm">
+                <form [formGroup]="answerForm" (ngSubmit)="editAnswermode?  onEditAnswerSubmit():onAnswerSubmit()" >
+
+                  <div class = "answer-form-row">
+                    <mat-form-field class="hidden-id">
+                      <input matInput formControlName="answerId" type="text">
+                    </mat-form-field>
+                    <mat-form-field class="answer-form-field full-width">
+                      <mat-label>Atsakymas</mat-label>
+                      <input matInput formControlName="answerContent" type="text" placeholder="Atsakymas"  name="taskTilte" required>
+                    </mat-form-field>
+                    <div class = "answer-isCorrect-option">
+                      <mat-label class = "answer-isCorrect-option-label">Teisingas:</mat-label>
+                      <input type="checkbox" formControlName="isCorrect">
+                    </div>
+                  </div>
+
+                  <div class="answer-form-buttons">
+                    <div class="answer-form-button">
+                      <button type="submit" mat-raised-button color="primary">{{editAnswermode? "Atnaujinti atsakymą":"Išsaugoti atsakymą"}}</button>
+                    </div>
+                    <div class="answer-form-button answer-form-button">
+                      <button mat-raised-button color="warn" (click)="cancelAnswer()">{{"Atšaukti"}}</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <div *ngIf="!displayAnswerForm" class = "add-answers-button">
+                <button mat-raised-button color="primary" (click)="openAddAnswers()">Pridėti atsakymą</button>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class = "task-form" *ngIf="update">
+      <mat-card class="task-card">
+          <mat-card-content class = "task-form-content">
+            <form [formGroup]="taskUpdatingForm" (ngSubmit)="onUpdate()" >
+              <div >
+                <mat-form-field class="task-form-field full-width">
+                  <mat-label>Užduoties pavadinimas</mat-label>
+                  <input matInput formControlName="taskTitle" type="text" placeholder="Užduoties pavadinimas"  name="taskTilte" required>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field class="task-form-field full-width">
+                  <mat-label>Užduotis</mat-label>
+                  <input  matInput formControlName="taskContent" type="text" placeholder="Užduotis" name="task">
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field class="task-form-field full-width">
+                  <mat-label>Užduoties tipas</mat-label>
+                  <mat-select formControlName="taskType">
+                    <mat-option *ngFor="let type of taskTypes | keyvalue" [value]="type.key">
+                      {{type.value}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field *ngIf="!tempFilename" class="task-form-field full-width">
+                  <mat-label>Užduoties failas</mat-label>
+                  <ngx-mat-file-input matInput formControlName="filename" placeholder="Užduoties failas"  name="file" (change)="onFileChange($event)"></ngx-mat-file-input>
+                </mat-form-field>
+                <div class="image-update" *ngIf="tempFilename">
+                  <h3>{{ tempFilename}}</h3>
+                  <mat-icon (click)="removeImage()">close</mat-icon>
+                </div>
+              </div>
+              <div class="task-form-buttons">
+                <div class="task-form-button">
+                  <button type="submit" mat-raised-button color="primary">Atnaujinti</button>
+                </div>
+                <div class="task-form-button">
+                  <button mat-raised-button color="warn" (click)="cancelTaskUpadate()">{{"Atšaukti"}}</button>
+                </div>
+              </div>
+            </form>
+          </mat-card-content>
+      </mat-card>
+    </div>
+
