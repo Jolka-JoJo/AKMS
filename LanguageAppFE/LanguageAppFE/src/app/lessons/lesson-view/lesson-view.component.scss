@@ -1,0 +1,76 @@
+.lesson-view-content{
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+
+  .lesson-form{
+    .lesson-form-content{
+      padding: 10px;
+      .lesson-form-field{
+        width: 100%;
+      }
+      .lesson-form-buttons{
+        display: flex;
+        justify-content: flex-end;
+      }
+      .lesson-form-button{
+        margin-left: 5px;
+      }
+      .image-update{
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
+
+  .lesson-card-content{
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    .lesson-title-row{
+
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      .lesson-table-actions{
+        display: flex;
+
+      }
+      .lesson-card-edit{
+        cursor: pointer;
+      }
+    }
+    .lesson-table-action{
+      margin-left: 10px;
+      cursor: pointer;
+
+    }
+    .lesson-status{
+      padding: 5px;
+      border-radius: 8px;
+      font-weight: 500;
+    }
+  }
+
+
+}
+
+@media only screen and (max-width: 600px) {
+  .lesson-view-content {
+    width: 350px;
+    //max-width: calc(100% - 20px);
+    margin: auto;
+    padding: 0 10px;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .lesson-view-content{
+    width: 1000px;
+    max-width: calc(100% - 20px);
+    //margin: 0 auto;
+    //padding: 0 10px;
+  }
+}
+

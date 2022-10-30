@@ -3,11 +3,16 @@ using LanguageAppBackEnd.dto;
 using LanguageAppBackEnd.Entities;
 using LanguageAppBackEnd.Facades;
 using LanguageAppBackEnd.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LanguageAppBackEnd.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Route("api/[controller]")]
+    [ApiController]
     public class LessonController : Controller
     {
         private readonly DataContext _context;
@@ -40,7 +45,9 @@ namespace LanguageAppBackEnd.Controllers
             if (request == null || !ModelState.IsValid)
                 return BadRequest();
 
-            Lesson lesson = _mapper.Map<Lesson>(request);
+            Lesson lesson = new Lesson();
+            lesson.lessonTitle = request.lessonTitle;
+           // lesson.status = 
             
             _context.Lessons.Add(lesson);
             await _context.SaveChangesAsync();
@@ -58,9 +65,8 @@ namespace LanguageAppBackEnd.Controllers
             if (dbLesson == null)
                 return BadRequest("Lesson not found.");
 
-            //ar tikrai suveiks?
-            Lesson lesson = _mapper.Map<Lesson>(request);
-            dbLesson = lesson;
+            dbLesson.lessonTitle = request.lessonTitle;
+            dbLesson.status = request.status.Value;
             
             await _context.SaveChangesAsync();
 

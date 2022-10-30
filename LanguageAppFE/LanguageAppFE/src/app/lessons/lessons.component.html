@@ -1,0 +1,97 @@
+
+  <div class = "lesson-main">
+    <div>
+      <div class = "lesson-form">
+        <mat-card class="lesson-card">
+          <mat-card-content class = "lesson-form-content">
+            <form [formGroup]="lessonForm" (ngSubmit)="onSubmit()" >
+              <div >
+                <mat-form-field class="lesson-form-field full-width">
+                  <mat-label>Pamokos pavadinimas</mat-label>
+                  <input matInput formControlName="lessonTitle" type="text" placeholder="Pamokos pavadinimas"  name="lessonTilte" required>
+                </mat-form-field>
+              </div>
+              <div class="lesson-form-button">
+                <button type="submit" mat-raised-button color="primary">Pridėti</button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-card  class="lesson-card">
+        <mat-card-content>
+          <div class="all-lesson-table">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Nr</th>
+                  <th scope="col">Pamokos pavadinimas</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let lesson of lessons; let i = index">
+
+                      <th scope="row"> {{ i + 1 }} </th>
+                      <td>{{ lesson.lessonTitle }}</td>
+                      <td >
+                        <div class="lesson-table-actions">
+                        <div class="lesson-table-action">
+                        <a mat-list-item [routerLink]="'/lessons/' + lesson.lessonId  +'/'">  <mat-icon >visibility</mat-icon> </a>
+
+                       </div>
+                       <!-- <div class="lesson-table-action">
+                        <a mat-list-item [routerLink]="'/'"> <mat-icon  (click)="selectUpdate(lesson)">edit</mat-icon> </a>
+                       </div> -->
+                       <div class="lesson-table-action">
+                        <a mat-list-item secondary><mat-icon  (click)="onDelete(lesson.lessonId!)">delete</mat-icon></a>
+                       </div>
+                        </div>
+                      </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <!-- <div class="container">
+    <div class="card m-5 p-3">
+        <div class="card-body">
+            <table class="table table-bordered table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone number</th>
+                    <th>Address</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let lesson of lesssonlessons; let i = index">
+                  <th scope="row"> {{ i + 1 }} </th>
+                  <td>{{ lesson.lessonTitle }}</td>
+                  <td >
+                    <div class="lesson-table-actions">
+                    <div class="lesson-table-action">
+                    <a mat-list-item [routerLink]="'/lessons/' + lesson.lessonId  +'/'">  <mat-icon >visibility</mat-icon> </a>
+
+                   </div>
+                   <div class="lesson-table-action">
+                    <a mat-list-item [routerLink]="'/'"> <mat-icon  (click)="selectUpdate(lesson)">edit</mat-icon> </a>
+                   </div>
+                   <div class="lesson-table-action">
+                    <a mat-list-item secondary><mat-icon  (click)="onDelete(lesson.lessonId!)">delete</mat-icon></a>
+                   </div>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div> -->

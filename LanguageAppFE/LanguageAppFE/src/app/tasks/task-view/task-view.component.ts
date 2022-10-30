@@ -1,9 +1,8 @@
 import { Answer } from './../../models/task/answer.module';
 import { LesssonTask, taskType } from './../../models/task/task.module';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { lastValueFrom } from 'rxjs';
 import { TasksService } from 'src/app/services/task/tasks.service';
 import { AnswersService } from 'src/app/services/task/answers.service';
@@ -96,7 +95,7 @@ export class TaskViewComponent implements OnInit{
     this.update = true;
     this.taskUpdatingForm.controls['taskTitle'].setValue(this.task.taskTitle);
     this.taskUpdatingForm.controls['taskContent'].setValue(this.task.taskContent!);
-    this.taskUpdatingForm.controls['taskType'].setValue(this.task.taskType!.toString());
+    this.taskUpdatingForm.controls['taskType'].setValue(this.task.taskType ? this.task.taskType!.toString() : "");
     //this.taskUpdatingForm.controls['filename'].setValue(this.task.taskImage!);
     this.tempFilename = this.task.taskImage;
   }
@@ -135,9 +134,11 @@ export class TaskViewComponent implements OnInit{
   editAnswer(answer: Answer){
     this.editAnswermode = true;
     this.displayAnswerForm = true;
+    console.log(answer);
+
     this.answerForm.controls['answerContent'].setValue(answer.AnswerContent);
-    this.answerForm.controls['isCorrect'].setValue(answer.isCorrect);
-    this.answerForm.controls['answerId'].setValue(answer.answerId.toString());
+    this.answerForm.controls['isCorrect'].setValue(answer.IsCorrect);
+    this.answerForm.controls['answerId'].setValue(answer.AnswerId!.toString());
   }
 
   onEditAnswerSubmit(){

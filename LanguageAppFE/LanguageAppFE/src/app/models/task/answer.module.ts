@@ -1,6 +1,6 @@
 export interface Answer{
-  answerId: number,
+  AnswerId: number,
   AnswerContent: string,
-  isCorrect: boolean,
+  IsCorrect: boolean,
   lessonTaskId: number
 }

@@ -30,6 +30,8 @@ import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { AuthComponent } from './authentication/auth/auth.component';
 import { JwtModule } from '@auth0/angular-jwt';
+import { LessonsComponent } from './lessons/lessons.component';
+import { LessonViewComponent } from './lessons/lesson-view/lesson-view.component';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -41,7 +43,9 @@ export function tokenGetter() {
     TasksComponent,
     TaskViewComponent,
     TaskUpdateComponent,
-    AuthComponent
+    AuthComponent,
+    LessonsComponent,
+    LessonViewComponent
   ],
   imports: [
     BrowserModule,

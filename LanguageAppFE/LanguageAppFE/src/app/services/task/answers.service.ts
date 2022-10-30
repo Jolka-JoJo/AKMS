@@ -30,7 +30,7 @@ export class AnswersService {
     return this.http.delete<Answer>(this.baseUrl + "/" + id);
   }
 
-  updateAnswer(id: any, answer: FormData): Observable<FormData>{
-    return this.http.put<FormData>(this.baseUrl + "/" + id, answer);
+  updateAnswer(id: any, answer: FormData): Observable<Answer[]>{
+    return this.http.put<Answer[]>(this.baseUrl + "/" + id, answer);
   }
 }

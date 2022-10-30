@@ -8,6 +8,6 @@ namespace LanguageAppBackEnd.Entities
         public string lessonTitle { get; set; }
         public int? status { get; set; }
         public DateTime? createdDate { get; set; }
-        public int? taskId  { get; set; }
+        //public int? taskId  { get; set; }
     }
 }

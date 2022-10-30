@@ -30,8 +30,8 @@
                 <div>
                   <div class = "answer-list-row" *ngFor="let answer of answers">
                     <div class="answer-text-isCorrect">
-                      <mat-icon class = "correct" *ngIf="answer.isCorrect">check</mat-icon>
-                      <mat-icon class = "incorrect" *ngIf="!answer.isCorrect">close</mat-icon>
+                      <mat-icon class = "correct" *ngIf="answer.IsCorrect">check</mat-icon>
+                      <mat-icon class = "incorrect" *ngIf="!answer.IsCorrect">close</mat-icon>
                       <span class = "answer-list-text">
                         {{answer.AnswerContent}}
                       </span>
@@ -41,7 +41,7 @@
                       <a mat-list-item> <mat-icon (click)="editAnswer(answer)" class = "task-card-edit">edit</mat-icon> </a>
                       </div>
                       <div class="answer-action">
-                      <a mat-list-item><mat-icon  (click)="deleteAnswer(answer.answerId)">delete</mat-icon></a>
+                      <a mat-list-item><mat-icon  (click)="deleteAnswer(answer.AnswerId)">delete</mat-icon></a>
                       </div>
                     </div>
                   </div>

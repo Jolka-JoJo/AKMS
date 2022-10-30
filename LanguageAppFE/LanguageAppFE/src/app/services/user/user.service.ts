@@ -54,8 +54,27 @@ export class UserService {
     const token = localStorage.getItem("token");
     const decodedToken = this.jwtHelper.decodeToken(token!);
     const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-    console.log(role);
     return role === 'Teacher';
+  }
+
+  public getUserRole(){
+    const token = localStorage.getItem("token");
+    const decodedToken = this.jwtHelper.decodeToken(token!);
+    const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    switch(role){
+      case "teacher":
+        return "Mokytojas";
+      case "Student":
+        return "Mokinys";
+    }
+    return "";
+  }
+
+  public getUserName(){
+    const token = localStorage.getItem("token");
+    const decodedToken = this.jwtHelper.decodeToken(token!);
+    const data = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+    return data;
   }
 
   logout(){

@@ -30,6 +30,7 @@ namespace LanguageAppBackEnd.Controllers
         {
             if (userForRegistration == null || !ModelState.IsValid)
                 return BadRequest();
+            userForRegistration.Password =  PasswordHashing.HashPassword(userForRegistration.Password);
 
             var user = _mapper.Map<User>(userForRegistration);
 
@@ -49,7 +50,9 @@ namespace LanguageAppBackEnd.Controllers
         public async Task<IActionResult> Login([FromBody] UserForAuthenticationDTO userForAuthentication)
         {
             var user = await _userManager.FindByNameAsync(userForAuthentication.Email);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, userForAuthentication.Password))
+            userForAuthentication.Password = PasswordHashing.HashPassword(userForAuthentication.Password);
+            //if (user == null || !await _userManager.CheckPasswordAsync(user, userForAuthentication.Password))
+            if (user == null || PasswordHashing.VerifyHashedPassword(user.Password, userForAuthentication.Password))
                 return Unauthorized(new AuthResponseDTO { ErrorMessage = "Invalid Authentication" });
             var signingCredentials = _jwtHandler.GetSigningCredentials();
             var claims = await _jwtHandler.GetClaims(user);

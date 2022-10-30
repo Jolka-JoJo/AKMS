@@ -1,0 +1,56 @@
+.lesson-main{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 50px auto;
+  padding: auto;
+
+  .lesson-card{
+    margin-bottom: 20px;
+  }
+
+  .lesson-form{
+    .lesson-form-content{
+      padding: 10px;
+      .lesson-form-field{
+        width: 100%;
+      }
+      .lesson-form-button{
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  .all-lesson-table{
+    padding: 10px;
+    .lesson-table-actions{
+      display: flex;
+      justify-content: flex-end;
+      text-align: right;
+      .lesson-table-action{
+        margin-left: 10px;
+        cursor: pointer;
+      }
+    }
+  }
+}
+.sidenav-lessons{
+  display: flex;
+}
+@media only screen and (max-width: 600px) {
+  .lesson-card {
+    width: 350px;
+    //max-width: calc(100% - 20px);
+    margin: auto;
+    padding: 0 10px;
+  }
+}
+@media only screen and (min-width: 768px) {
+  .lesson-card{
+    width: 1200px;
+    max-width: calc(100% - 20px);
+    margin: 0 auto;
+    padding: 0 10px;
+  }
+}

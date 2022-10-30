@@ -10,12 +10,16 @@ import { Router } from '@angular/router';
 export class AppComponent {
   public isUserAuthenticated!: boolean;
   title = 'AKMS';
+  userName = "";
+  role = "";
   constructor (private userService: UserService, private router: Router){}
   ngOnInit(): void {
   this.userService.authChanged
     .subscribe(res => {
       this.isUserAuthenticated = res;
-      console.log("this.isUserAuthenticated", this.isUserAuthenticated)
+      this.userName = this.userService.getUserName();
+      this.role = this.userService.getUserRole();
+      //console.log("this.isUserAuthenticated", this.isUserAuthenticated)
     })
   }
 

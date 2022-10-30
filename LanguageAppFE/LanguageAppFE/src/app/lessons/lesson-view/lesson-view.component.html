@@ -1,0 +1,63 @@
+<div class = "lesson-view-content">
+
+
+  <div class = "lesson-form">
+    <mat-card class="lesson-card-content">
+      <mat-card-content class = "lesson-form-content">
+        <div class = "lesson-title-row">
+          <h2>{{ lesson ? lesson.lessonTitle : ""}}</h2>
+
+          <div class="lesson-table-actions">
+            <div>
+              <div id ="lessonStatus" class="lesson-status">
+                <span class="lesson-status-text"> {{status ? status : ""}}</span>
+              </div>
+            </div>
+            <div class="lesson-table-action">
+            <a mat-list-item> <mat-icon (click)="updateOpen()" class = "lesson-card-edit">edit</mat-icon> </a>
+            </div>
+            <div class="lesson-table-action">
+            <a mat-list-item><mat-icon  (click)="onDelete(lesson.lessonId!)">delete</mat-icon></a>
+            </div>
+          </div>
+        </div>
+        <div class="pre-lesson-content">
+
+
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class = "lesson-form" *ngIf="update">
+    <mat-card class="lesson-card">
+        <mat-card-content class = "lesson-form-content">
+          <form [formGroup]="lessonUpdatingForm" (ngSubmit)="onUpdate()" >
+            <div >
+              <mat-form-field class="lesson-form-field full-width">
+                <mat-label>Pamokos pavadinimas</mat-label>
+                <input matInput formControlName="lessonTitle" type="text" placeholder="Užduoties pavadinimas"  name="lessonTilte" required>
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field class="lesson-form-field full-width">
+                <mat-label>Pamokos statusas</mat-label>
+                <mat-select formControlName="status">
+                  <mat-option *ngFor="let lessonStatus of statuses | keyvalue" [value]="lessonStatus.key">
+                    {{lessonStatus.value}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="lesson-form-buttons">
+              <div class="lesson-form-button">
+                <button type="submit" mat-raised-button color="primary">Atnaujinti</button>
+              </div>
+              <div class="lesson-form-button">
+                <button mat-raised-button color="warn" (click)="cancelLessonUpadate()">{{"Atšaukti"}}</button>
+              </div>
+            </div>
+          </form>
+        </mat-card-content>
+    </mat-card>
+  </div>
+
