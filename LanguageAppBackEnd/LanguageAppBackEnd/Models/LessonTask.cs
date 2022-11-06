@@ -7,10 +7,6 @@ namespace LanguageAppBackEnd.Models
 {
     public class lessonTask
     {
-        public lessonTask()
-        {
-            this.lessons = new HashSet<Lesson>();
-        }
 
         [Key]
         public int taskId { get; set; }
@@ -25,7 +21,8 @@ namespace LanguageAppBackEnd.Models
 
         public ICollection<Answer> answers { get; set; }
 
-        public virtual ICollection<Lesson> lessons { get; set; }
+        public virtual ICollection<LessonTaskLesson> LessonTaskLesson { get; set; }
 
+        public virtual ICollection<UserTask> UserTask { get; set; }
     }
 }

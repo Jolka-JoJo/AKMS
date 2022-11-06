@@ -50,9 +50,7 @@ namespace LanguageAppBackEnd.Controllers
         public async Task<IActionResult> Login([FromBody] UserForAuthenticationDTO userForAuthentication)
         {
             var user = await _userManager.FindByNameAsync(userForAuthentication.Email);
-            userForAuthentication.Password = PasswordHashing.HashPassword(userForAuthentication.Password);
-            //if (user == null || !await _userManager.CheckPasswordAsync(user, userForAuthentication.Password))
-            if (user == null || PasswordHashing.VerifyHashedPassword(user.Password, userForAuthentication.Password))
+            if (user == null || !PasswordHashing.VerifyHashedPassword(user.Password, userForAuthentication.Password))
                 return Unauthorized(new AuthResponseDTO { ErrorMessage = "Invalid Authentication" });
             var signingCredentials = _jwtHandler.GetSigningCredentials();
             var claims = await _jwtHandler.GetClaims(user);
@@ -60,6 +58,6 @@ namespace LanguageAppBackEnd.Controllers
             var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
             return Ok(new AuthResponseDTO { IsAuthSuccessful = true, Token = token });
         }
-
+    
     }
 }

@@ -23,6 +23,10 @@
       }
     }
   }
+  .dialog-button{
+    display: flex;
+    justify-content: flex-end;
+  }
 
   .lesson-card-content{
     margin: auto;
@@ -55,6 +59,15 @@
 
 
 }
+table {
+  width: 100%;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
 
 @media only screen and (max-width: 600px) {
   .lesson-view-content {

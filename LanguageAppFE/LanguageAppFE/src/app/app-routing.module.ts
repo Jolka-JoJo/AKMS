@@ -1,3 +1,4 @@
+import { UpdateProfileComponent } from './authentication/update-profile/update-profile.component';
 import { TaskViewComponent } from './tasks/task-view/task-view.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -13,6 +14,7 @@ const routes: Routes = [
   {path:'tasks/:id', component:TaskViewComponent, canActivate: [AuthGuard]},
   {path:'lessons', component:LessonsComponent, canActivate: [AuthGuard]},
   {path:'lessons/:id', component:LessonViewComponent, canActivate: [AuthGuard]},
+  {path:'updateProfile', component:UpdateProfileComponent, canActivate: [AuthGuard]},
 ];
 
 @NgModule({

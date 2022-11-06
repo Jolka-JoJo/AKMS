@@ -6,16 +6,12 @@ namespace LanguageAppBackEnd.Models
 {
     public class Lesson
     {
-        public Lesson()
-        {
-            this.tasks = new HashSet<lessonTask>();
-        }
-
         [Key]
         public int lessonId { get; set; }
         public string lessonTitle { get; set; }
         public int status { get; set; } = 1;
         public DateTime createdDate { get; set; } = DateTime.Now;
-        public virtual ICollection<lessonTask> tasks { get; set; }
+        public virtual ICollection<LessonTaskLesson> LessonTaskLesson { get; set; }
+        public virtual ICollection<UserLesson> UserLesson { get; set; }
     }
 }

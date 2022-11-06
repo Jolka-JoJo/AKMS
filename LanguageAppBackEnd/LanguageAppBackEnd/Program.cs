@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using ServiceStack;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,11 +55,17 @@ builder.Services.AddIdentity<User, IdentityRole>(opt =>
     .AddDefaultTokenProviders();
 
 
-builder.Services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.PropertyNamingPolicy = null;
+builder.Services.AddControllers().AddJsonOptions(options => 
+{ 
+    options.JsonSerializerOptions.PropertyNamingPolicy = null;
     options.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.WriteIndented = true;
+
 });
+
 builder.Services.AddAutoMapper(typeof(Program));
-builder.Services.AddControllersWithViews();
+//builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<JwtHandler>();
 
 var allowOrigins = "allowOrigins";

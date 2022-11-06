@@ -1,11 +1,11 @@
 <div class="main-navbar-sidenav">
   <mat-toolbar color="primary">
     <mat-toolbar-row>
-      <button mat-icon-button>
+      <button  *ngIf='isUserAuthenticated' mat-icon-button>
         <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
       </button>
       <h1>AKMS</h1>
-      <div clas = "main-buttons">
+      <div *ngIf='isUserAuthenticated' clas = "main-buttons">
         <a mat-button [routerLink]="['/tasks']"routerLinkActive="active"
         [routerLinkActiveOptions]="{exact: true}"> Užduotys </a>
         <a mat-button [routerLink]="['/lessons']"routerLinkActive="active"
@@ -16,10 +16,19 @@
         <div class="auth-buttons">
           <a  *ngIf='!isUserAuthenticated' mat-button [routerLink]="['/']" routerLinkActive="active"
           [routerLinkActiveOptions]="{exact: true}"> Prisijungimas </a>
-          <span *ngIf='isUserAuthenticated' class = "role-text">{{role}}: </span>
-          <span *ngIf='isUserAuthenticated' class = "role-username">{{userName}}</span>
-          <a *ngIf='isUserAuthenticated' mat-button (click)="logout()"> Logout </a>
         </div>
+        <button *ngIf='isUserAuthenticated' mat-button [matMenuTriggerFor]="beforeMenu">
+          <span  class = "role-username">
+            {{userName}}
+          </span>
+          <mat-icon>arrow_drop_down</mat-icon>
+        </button>
+        <mat-menu #beforeMenu="matMenu" xPosition="before">
+          <button mat-menu-item [routerLink]="'/updateProfile'" >Redaguoti profilį</button>
+          <button mat-menu-item (click)="logout()">
+            Atsijungti
+          </button>
+        </mat-menu>
     </mat-toolbar-row>
 
   </mat-toolbar>

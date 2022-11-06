@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { LesssonTask } from 'src/app/models/task/task.module';
+import { LesssonTask, userTasksDTO } from 'src/app/models/task/task.module';
 import { EnvironmentUrlService } from '../environment-url.service';
 
 
@@ -13,27 +13,28 @@ export class TasksService {
   url = 'https://localhost:7040/api/task';
   constructor(private http: HttpClient, private envUrl: EnvironmentUrlService) { }
 
-  getAllTasks(): Observable<LesssonTask[]> {
-    console.log(this.url);
-    return this.http.get<LesssonTask[]>(this.url);
+  getAllTasks(filterData: userTasksDTO): Observable<LesssonTask[]> {
+    return this.http.post<LesssonTask[]>(this.url + "/tasks", filterData);
   }
 
   getTask(id: number): Observable<LesssonTask> {
     return this.http.get<LesssonTask>(this.url + "/" + id);
   }
 
-  addTask(task: FormData): Observable<FormData>{
-    return this.http.post<FormData>(this.url, task);
+  addTask(task: FormData): Observable<LesssonTask[]>{
+    return this.http.post<LesssonTask[]>(this.url, task);
   }
 
-  deleteTask(id: number): Observable<LesssonTask>{
-    return this.http.delete<LesssonTask>(this.url + "/" + id);
+  deleteTask(taskId: number, userId: string): Observable<LesssonTask[]>{
+    return this.http.delete<LesssonTask[]>(this.url + "/delete/" + userId + "/" + taskId);
   }
 
-  updateTask(id: number, task: FormData): Observable<FormData>{
-    return this.http.put<FormData>(this.url + "/" + id, task);
+  updateTask(id: number, task: FormData): Observable<LesssonTask>{
+    return this.http.put<LesssonTask>(this.url + "/" + id, task);
   }
+
   private createCompleteRoute = (route: string, envAddress: string) => {
     return `${envAddress}/${route}`;
   }
+
 }

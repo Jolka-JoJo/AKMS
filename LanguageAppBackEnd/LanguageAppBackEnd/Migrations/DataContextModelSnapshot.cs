@@ -96,6 +96,21 @@ namespace LanguageAppBackEnd.Migrations
                     b.ToTable("Task");
                 });
 
+            modelBuilder.Entity("LanguageAppBackEnd.Models.LessonTaskLesson", b =>
+                {
+                    b.Property<int>("LessonId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TaskId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LessonId", "TaskId");
+
+                    b.HasIndex("TaskId");
+
+                    b.ToTable("LessonTaskLesson");
+                });
+
             modelBuilder.Entity("LanguageAppBackEnd.Models.User", b =>
                 {
                     b.Property<string>("Id")
@@ -116,7 +131,6 @@ namespace LanguageAppBackEnd.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
@@ -160,12 +174,6 @@ namespace LanguageAppBackEnd.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<int>("userId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("userImage")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -179,19 +187,34 @@ namespace LanguageAppBackEnd.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("LessonlessonTask", b =>
+            modelBuilder.Entity("LanguageAppBackEnd.Models.UserLesson", b =>
                 {
-                    b.Property<int>("lessonslessonId")
+                    b.Property<int>("LessonId")
                         .HasColumnType("int");
 
-                    b.Property<int>("taskstaskId")
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LessonId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserLesson");
+                });
+
+            modelBuilder.Entity("LanguageAppBackEnd.Models.UserTask", b =>
+                {
+                    b.Property<int>("TaskId")
                         .HasColumnType("int");
 
-                    b.HasKey("lessonslessonId", "taskstaskId");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasIndex("taskstaskId");
+                    b.HasKey("TaskId", "UserId");
 
-                    b.ToTable("LessonlessonTask");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserTask");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -223,15 +246,15 @@ namespace LanguageAppBackEnd.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3fce100b-f089-46ba-a850-82b218cdf7bf",
-                            ConcurrencyStamp = "0309a270-1de1-4fca-8fe0-cf77fb0f9b25",
+                            Id = "dba3f35c-2570-4146-8454-9e26eeec3ffa",
+                            ConcurrencyStamp = "e2b842b1-807f-4ee8-a6c0-847be4ea05b3",
                             Name = "Student",
                             NormalizedName = "STUDENT"
                         },
                         new
                         {
-                            Id = "bec4e7dd-389c-4385-8444-f27d02df0702",
-                            ConcurrencyStamp = "c6c8513f-14bc-4843-a3f3-0571f4f893fa",
+                            Id = "dc7dd0fd-2974-417d-9ba1-afe6c1e0fc3f",
+                            ConcurrencyStamp = "459d3e9c-a5a0-4b30-9b58-c9598d320ce5",
                             Name = "teacher",
                             NormalizedName = "TEACHER"
                         });
@@ -354,19 +377,61 @@ namespace LanguageAppBackEnd.Migrations
                     b.Navigation("lessonTask");
                 });
 
-            modelBuilder.Entity("LessonlessonTask", b =>
+            modelBuilder.Entity("LanguageAppBackEnd.Models.LessonTaskLesson", b =>
                 {
-                    b.HasOne("LanguageAppBackEnd.Models.Lesson", null)
-                        .WithMany()
-                        .HasForeignKey("lessonslessonId")
+                    b.HasOne("LanguageAppBackEnd.Models.Lesson", "Lesson")
+                        .WithMany("LessonTaskLesson")
+                        .HasForeignKey("LessonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LanguageAppBackEnd.Models.lessonTask", null)
-                        .WithMany()
-                        .HasForeignKey("taskstaskId")
+                    b.HasOne("LanguageAppBackEnd.Models.lessonTask", "Task")
+                        .WithMany("LessonTaskLesson")
+                        .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Lesson");
+
+                    b.Navigation("Task");
+                });
+
+            modelBuilder.Entity("LanguageAppBackEnd.Models.UserLesson", b =>
+                {
+                    b.HasOne("LanguageAppBackEnd.Models.Lesson", "Lesson")
+                        .WithMany("UserLesson")
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LanguageAppBackEnd.Models.User", "User")
+                        .WithMany("UserLesson")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LanguageAppBackEnd.Models.UserTask", b =>
+                {
+                    b.HasOne("LanguageAppBackEnd.Models.lessonTask", "Task")
+                        .WithMany("UserTask")
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LanguageAppBackEnd.Models.User", "User")
+                        .WithMany("UserTask")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Task");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -420,9 +485,27 @@ namespace LanguageAppBackEnd.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("LanguageAppBackEnd.Models.Lesson", b =>
+                {
+                    b.Navigation("LessonTaskLesson");
+
+                    b.Navigation("UserLesson");
+                });
+
             modelBuilder.Entity("LanguageAppBackEnd.Models.lessonTask", b =>
                 {
+                    b.Navigation("LessonTaskLesson");
+
+                    b.Navigation("UserTask");
+
                     b.Navigation("answers");
+                });
+
+            modelBuilder.Entity("LanguageAppBackEnd.Models.User", b =>
+                {
+                    b.Navigation("UserLesson");
+
+                    b.Navigation("UserTask");
                 });
 #pragma warning restore 612, 618
         }

@@ -23,3 +23,21 @@ export interface AuthResponseDto {
   ErrorMessage: string;
   Token: string;
 }
+
+export interface UserForProfileDto {
+  UserId: string;
+  FirstName: string;
+  LastName: string;
+}
+
+export interface PasswordDto {
+  UserId: string;
+  Password: string;
+  NewPassword: string;
+  ConfirmNewPassword: string;
+}
+
+export interface userTasksDTO{
+  userId?: string;
+  tasksToFilter?: number[];
+}

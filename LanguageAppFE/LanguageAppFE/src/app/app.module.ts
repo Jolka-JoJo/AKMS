@@ -26,12 +26,18 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TaskViewComponent } from './tasks/task-view/task-view.component';
 import { TaskUpdateComponent } from './tasks/task-update/task-update.component';
 import { MaterialFileInputModule } from 'ngx-material-file-input';
-
+import {MatMenuModule} from '@angular/material/menu';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { AuthComponent } from './authentication/auth/auth.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { LessonsComponent } from './lessons/lessons.component';
 import { LessonViewComponent } from './lessons/lesson-view/lesson-view.component';
+import { UpdateProfileComponent } from './authentication/update-profile/update-profile.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { AddTaskToLessonDialogComponent } from './lessons/add-task-to-lesson-dialog/add-task-to-lesson-dialog.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -45,7 +51,9 @@ export function tokenGetter() {
     TaskUpdateComponent,
     AuthComponent,
     LessonsComponent,
-    LessonViewComponent
+    LessonViewComponent,
+    UpdateProfileComponent,
+    AddTaskToLessonDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -72,6 +80,10 @@ export function tokenGetter() {
     NgbModule,
     MaterialFileInputModule,
     PdfViewerModule,
+    MatMenuModule,
+    MatDialogModule,
+    MatPaginatorModule,
+    MatCheckboxModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

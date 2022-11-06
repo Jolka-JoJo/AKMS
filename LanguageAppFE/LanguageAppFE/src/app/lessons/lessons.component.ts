@@ -1,3 +1,5 @@
+import { user } from 'src/app/models/task/user.module';
+import { UserService } from 'src/app/services/user/user.service';
 import { LessonResponse } from './../interfaces/lesson';
 import { LessonsService } from './../services/lesson/lessons.service';
 import { Component, OnInit } from '@angular/core';
@@ -13,22 +15,27 @@ export class LessonsComponent implements OnInit {
     lessonTitle: new FormControl('', Validators.required)
   });
   lessons:LessonResponse[] = [];
+  userId!:string;
+  constructor(private lessonService: LessonsService, private formBuilder: FormBuilder, private userService:UserService) { }
 
-  constructor(private lessonService: LessonsService, private formBuilder: FormBuilder) { }
+  ngOnInit(){
+    this.userService.getUser().subscribe(user =>{
+      this.userId = user.Id;
+      this.lessonService.getAllLessons(user.Id).subscribe((res:any) => this.lessons = res);
 
-  ngOnInit(): void {
-    this.lessonService.getAllLessons().subscribe(res => this.lessons = res);
+    })
   }
 
   onSubmit(){
     var formData = new FormData();
     formData.append('lessonTitle', this.lessonForm.value.lessonTitle!);
+    formData.append('userId', this.userId!);
 
     this.lessonService.addLesson(formData).subscribe(response => this.lessons = response);
     this.lessonForm.reset();
 
   }
   onDelete(id: number){
-    this.lessonService.deleteLesson(id).subscribe(response=> this.lessons = response);
+    this.lessonService.deleteLesson(id, this.userId).subscribe(response=> this.lessons = response);
   }
 }

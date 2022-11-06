@@ -5,7 +5,6 @@ namespace LanguageAppBackEnd.dto
     
     public class TaskDTO
     {
-        //public int taskId { get; set; }
         public IFormFile? file { get; set; }
 
         public string taskTitle { get; set; }
@@ -16,7 +15,7 @@ namespace LanguageAppBackEnd.dto
 
         public string? taskContent { get; set; }
 
-        //public string? taskImage { get; set; }
+        public string? userId { get; set; }
 
     }
 }

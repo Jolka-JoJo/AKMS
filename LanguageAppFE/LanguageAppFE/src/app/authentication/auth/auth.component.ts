@@ -56,7 +56,6 @@ export class AuthComponent implements OnInit {
       this.router.navigate(['tasks']);
     },
     error: (err: HttpErrorResponse) => {
-      console.log(err);
       this.loginError = "Neteisingi prisijungimo duomenys";
     }})
 
@@ -82,39 +81,9 @@ export class AuthComponent implements OnInit {
         this.registerForm.reset();
       },
       error: (err: HttpErrorResponse) => {
-        if(err.error.Errors && err.error.Errors instanceof Array){
-          err.error.Errors.forEach((el:any) => {
-            switch(el){
-              case "Username 'pastas@pastas.lt' is already taken.":
-                this.registrationErrorMessage.push("Naudotojas su tokiu elektroniniu paštu jau egzistuoja");
-                break;
-              case "Passwords must be at least 7 characters.":
-                this.registrationErrorMessage.push("Slaptažodį turi sudaryti bent 7 simboliai");
-                break;
-            }
-          });
-        } else
-        if(!(err.error.Errors instanceof  Array) && err.error.errors.ConfirmPassword){
+        if(!(err.error.Errors instanceof Array) && err.error.errors.ConfirmPassword){
           this.registrationErrorMessage.push(err.error.errors.ConfirmPassword[0])
         };
     }})
   }
-
-  validateConfirmPassword (passwordControl: AbstractControl): ValidatorFn {
-    return (confirmationControl: AbstractControl) : { [key: string]: boolean } | null => {
-      const confirmValue = confirmationControl.value;
-      const passwordValue = passwordControl.value;
-
-      if (confirmValue === '') {
-          return null;
-      }
-
-      if (confirmValue !== passwordValue) {
-          return  { mustMatch: true }
-      }
-
-      return null;
-    };
-  }
-
 }

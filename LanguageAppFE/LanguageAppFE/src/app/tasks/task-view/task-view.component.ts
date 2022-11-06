@@ -1,3 +1,4 @@
+import { UserService } from './../../services/user/user.service';
 import { Answer } from './../../models/task/answer.module';
 import { LesssonTask, taskType } from './../../models/task/task.module';
 import { Component, OnInit } from '@angular/core';
@@ -20,7 +21,8 @@ export class TaskViewComponent implements OnInit{
     private route: ActivatedRoute,
     private tasksService: TasksService,
     private answerService: AnswersService,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    private userService: UserService) {
   }
 
   taskId!: number;
@@ -64,11 +66,9 @@ export class TaskViewComponent implements OnInit{
   }
 
   async getAnswers(){
-    console.log("this.answers");
     await this.answerService.getAllAnswers(this.taskId).subscribe(data => {
       this.answers = data;
-      console.log(this.answers)});
-
+    });
   }
 
   onFileChange(event: any) {
@@ -101,7 +101,11 @@ export class TaskViewComponent implements OnInit{
   }
 
   onDelete(id: number){
-    this.tasksService.deleteTask(id).subscribe(response =>     this.router.navigate(['/tasks']));
+    this.userService.getUser().subscribe(res => {
+
+      this.tasksService.deleteTask(id, res.Id).subscribe(response =>     this.router.navigate(['/tasks']));
+
+    })
   }
 
 
@@ -120,7 +124,6 @@ export class TaskViewComponent implements OnInit{
 
   onAnswerSubmit(){
     var formData = new FormData();
-    console.log(this.answerForm.value.isCorrect!.toString());
     formData.append('answerContent', this.answerForm.value.answerContent!);
     formData.append('isCorrect', this.answerForm.value.isCorrect!.toString());
     formData.append('lessonTaskId', this.taskId.toString());
@@ -134,7 +137,6 @@ export class TaskViewComponent implements OnInit{
   editAnswer(answer: Answer){
     this.editAnswermode = true;
     this.displayAnswerForm = true;
-    console.log(answer);
 
     this.answerForm.controls['answerContent'].setValue(answer.AnswerContent);
     this.answerForm.controls['isCorrect'].setValue(answer.IsCorrect);
@@ -143,7 +145,6 @@ export class TaskViewComponent implements OnInit{
 
   onEditAnswerSubmit(){
     var formData = new FormData();
-    console.log(this.answerForm.value.isCorrect!.toString());
     formData.append('answerContent', this.answerForm.value.answerContent!);
     formData.append('isCorrect', this.answerForm.value.isCorrect!.toString());
     var answerId = this.answerForm.value.answerId!;

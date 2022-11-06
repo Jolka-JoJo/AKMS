@@ -1,3 +1,5 @@
+import { LesssonTask } from './../models/task/task.module';
+
 export interface LessonRequest{
   lessonTitle: string;
   status?: number;
@@ -11,7 +13,14 @@ export interface LessonResponse{
   status?: number;
   createdDate?: Date;
   taskId?: number;
+  tasks?: LesssonTask[];
 }
+
+export interface AddTaskToLessonRequest{
+  lessonId: number,
+  tasksIds: number[]
+}
+
 export enum LessonStatus{
   Draft,
   Published,

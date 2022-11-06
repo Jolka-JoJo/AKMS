@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable, Subject } from 'rxjs';
-import { AuthResponseDto, RegistrationResponseDto, UserForAuthenticationDto, UserForRegistrationDto } from 'src/app/interfaces/user';
+import { AuthResponseDto, PasswordDto, RegistrationResponseDto, UserForAuthenticationDto, UserForProfileDto, UserForRegistrationDto } from 'src/app/interfaces/user';
 import { user } from 'src/app/models/task/user.module';
 import { EnvironmentUrlService } from '../environment-url.service';
 
@@ -15,13 +15,14 @@ export class UserService {
   constructor(private http: HttpClient, private envUrl: EnvironmentUrlService, private jwtHelper: JwtHelperService) { }
   private authChangeSub = new Subject<boolean>();
   public authChanged = this.authChangeSub.asObservable();
+  userId?: string;
 
   getAllUsers(): Observable<user[]> {
     return this.http.get<user[]>(this.baseUrl);
   }
 
-  getUser(id: number): Observable<user> {
-    return this.http.get<user>(this.baseUrl + "/" + id);
+  getUser(): Observable<user> {
+    return this.http.get<user>(this.baseUrl + "/" + this.getUserName());
   }
 
   addUser(user: FormData): Observable<FormData>{
@@ -31,13 +32,21 @@ export class UserService {
   loginUser(body: UserForAuthenticationDto){
     return this.http.post<AuthResponseDto>('https://localhost:7040/api/accounts/Login', body);
   }
+
   registerUser(body: UserForRegistrationDto){
-    console.log(body)
     return this.http.post<RegistrationResponseDto> ('https://localhost:7040/api/accounts/Registration', body);
   }
 
-  updateUser(id: number, user: FormData): Observable<FormData>{
-    return this.http.put<FormData>(this.baseUrl + "/" + id, user);
+  updateUser(user: UserForProfileDto): Observable<FormData>{
+    return this.http.put<FormData>(this.baseUrl + "/profile", user);
+  }
+
+  updateUserPassword(user: PasswordDto): Observable<FormData>{
+    return this.http.put<FormData>(this.baseUrl + "/password", user);
+  }
+
+  deleteUser(id: string): Observable<user[]>{
+    return this.http.delete<user[]>(this.baseUrl + "/" + id);
   }
 
   sendAuthStateChangeNotification(isAuthenticated: boolean){
@@ -50,8 +59,10 @@ export class UserService {
     this.sendAuthStateChangeNotification(auth)
     return auth;
   }
+
   public isUserTeacher (): boolean{
     const token = localStorage.getItem("token");
+    if(!token) return false;
     const decodedToken = this.jwtHelper.decodeToken(token!);
     const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
     return role === 'Teacher';
@@ -81,7 +92,9 @@ export class UserService {
     localStorage.removeItem("token");
     this.sendAuthStateChangeNotification(false);
   }
+
   createCompleteRoute(route: string, envAddress: string){
     return `${envAddress}/${route}`;
   }
+
 }

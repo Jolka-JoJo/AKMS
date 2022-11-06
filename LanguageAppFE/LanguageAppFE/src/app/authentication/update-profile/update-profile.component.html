@@ -1,0 +1,92 @@
+<div class = "profile-view-content">
+  <div class = "profile-form">
+    <mat-card class="profile-card">
+        <mat-card-content class = "profile-form-content">
+          <div class = "header-row">
+            <h2>Bendroji informacija</h2>
+            <div class="delete-button">
+              <button mat-raised-button color="warn" (click)="deleteUser()">Ištrinti paskyrą</button>
+            </div>
+          </div>
+
+          <div class="alert alert-success" *ngIf="profileUpdated" role="alert">
+            <span>Profilis atnaujintas</span>
+          </div>
+          <form [formGroup]="profileUpdatingForm" (ngSubmit)="onUpdate()" >
+            <div >
+              <mat-form-field class="profile-form-field full-width">
+                <mat-label>Vardas</mat-label>
+                <input matInput formControlName="firstname" type="text" placeholder="Vardas"  name="firstname" required>
+              </mat-form-field>
+            </div>
+            <div >
+              <mat-form-field class="profile-form-field full-width">
+                <mat-label>Pavardė</mat-label>
+                <input matInput formControlName="lastname" type="text" placeholder="Pavardė"  name="lastname" required>
+              </mat-form-field>
+            </div>
+            <div >
+              <mat-form-field class="profile-form-field full-width">
+                <mat-label>Elektroninis paštas (nekoreguojamas)</mat-label>
+                <input matInput formControlName="email" type="email" placeholder="Elektroninis paštas"  name="email" readonly="{{true}}">
+              </mat-form-field>
+            </div>
+            <div >
+              <mat-form-field class="profile-form-field full-width">
+                <mat-label>Rolė (nekoreguojama)</mat-label>
+                <input matInput formControlName="role" type="text" placeholder="Rolė"  name="role" readonly="{{true}}">
+              </mat-form-field>
+            </div>
+            <div class="profile-form-buttons">
+              <div class="profile-form-button">
+                <button type="submit" [disabled]="!profileUpdatingForm.valid" mat-raised-button color="primary">Atnaujinti</button>
+              </div>
+            </div>
+          </form>
+        </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<div class = "profile-view-content">
+  <div class = "profile-form">
+    <mat-card class="profile-card">
+        <mat-card-content class = "profile-form-content">
+          <h2>Slaptažodžio keitimas</h2>
+          <div class="alert alert-success" *ngIf="passwordUpdated" role="alert">
+            <span>Slaptažodis pakeistas</span>
+          </div>
+          <div *ngIf="errors.length > 0" class="alert alert-danger" role="alert">
+            <div *ngFor="let error of errors">
+              <span >{{error}}</span>
+            </div>
+          </div>
+          <form [formGroup]="passwordUpdatingForm" (ngSubmit)="onPasswordUpdate(formDirective)" #formDirective="ngForm">
+            <div >
+              <mat-form-field class="profile-form-field full-width">
+                <mat-label>Dabartinis slaptažodis</mat-label>
+                <input matInput formControlName="password" type="password" placeholder="Dabartinis slaptažodis"  name="password" required>
+              </mat-form-field>
+            </div>
+            <div >
+              <mat-form-field class="profile-form-field full-width">
+                <mat-label>Naujas slaptažodis</mat-label>
+                <input matInput formControlName="newPassword" type="password" placeholder="Naujas slaptažodis"  name="newPassword" required>
+              </mat-form-field>
+            </div>
+            <div >
+              <mat-form-field class="profile-form-field full-width">
+                <mat-label>Patvirtinti naują slaptažodį</mat-label>
+                <input matInput formControlName="confirm" type="password" placeholder="Patvirtinti naują slaptažodį"  name="confirm" required>
+              </mat-form-field>
+            </div>
+            <div class="profile-form-buttons">
+              <div class="profile-form-button">
+                <button type="submit" [disabled]="!passwordUpdatingForm.valid" mat-raised-button color="primary">Atnaujinti</button>
+              </div>
+            </div>
+          </form>
+        </mat-card-content>
+    </mat-card>
+  </div>
+
+

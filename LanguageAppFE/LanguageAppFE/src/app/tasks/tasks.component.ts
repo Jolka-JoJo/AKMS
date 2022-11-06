@@ -1,4 +1,4 @@
-import { LesssonTask, taskType } from './../models/task/task.module';
+import { LesssonTask, taskType, userTasksDTO } from './../models/task/task.module';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, RequiredValidator, Validators } from '@angular/forms';
 import { TasksService } from '../services/task/tasks.service';
@@ -15,6 +15,7 @@ export class TasksComponent implements OnInit, OnDestroy  {
   lesssonTasks: LesssonTask[] =[];
   updateTaskId: number | undefined;
   taskTypes = taskType;
+  userId!: string;
 
   taskAddingForm = this.formBuilder.group({
     taskTitle: new FormControl('', Validators.required),
@@ -34,9 +35,16 @@ export class TasksComponent implements OnInit, OnDestroy  {
   }
 
   getAllTasks(){
-    this.tasksService.getAllTasks().subscribe((elements)=>{
-      this.lesssonTasks = elements;
+    this.userService.getUser().subscribe(res => {
+      this.userId = res.Id;
+      var data: userTasksDTO ={
+        userId: res.Id
+      }
+      this.tasksService.getAllTasks(data).subscribe((elements)=>{
+        this.lesssonTasks = elements;
+      })
     })
+
   }
 
   onFileChange(event: any) {
@@ -56,8 +64,9 @@ export class TasksComponent implements OnInit, OnDestroy  {
     formData.append('taskTitle', this.taskAddingForm.value.taskTitle!);
     formData.append('taskContent', this.taskAddingForm.value.taskContent!);
     formData.append('taskType', this.taskAddingForm.value.taskType!);
+    formData.append('userId', this.userId)
 
-    this.tasksService.addTask(formData).subscribe(response=> this.getAllTasks());
+    this.tasksService.addTask(formData).subscribe(response=> this.lesssonTasks = response);
 
     this.taskAddingForm = this.formBuilder.group({
       taskTitle: new FormControl('', Validators.required),
@@ -69,7 +78,7 @@ export class TasksComponent implements OnInit, OnDestroy  {
   }
 
   onDelete(id: number){
-    this.tasksService.deleteTask(id).subscribe(response=> this.getAllTasks());
+    this.tasksService.deleteTask(id, this.userId).subscribe(response=> this.lesssonTasks = response);
   }
 
   selectUpdate(task: LesssonTask){

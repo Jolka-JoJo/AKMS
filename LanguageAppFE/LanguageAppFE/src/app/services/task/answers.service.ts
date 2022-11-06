@@ -22,7 +22,6 @@ export class AnswersService {
   }
 
   addAnswer(answer: FormData): Observable<FormData>{
-    console.log("here", this.baseUrl);
     return  this.http.post<FormData>(this.baseUrl, answer);
   }
 

@@ -1,10 +1,19 @@
 ﻿using LanguageAppBackEnd.dto;
+using LanguageAppBackEnd.Entities;
 using LanguageAppBackEnd.Facades;
 using LanguageAppBackEnd.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using ServiceStack.Web;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace LanguageAppBackEnd.Controllers
 {
@@ -20,10 +29,18 @@ namespace LanguageAppBackEnd.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<lessonTask>>> GetAllTasks()
+        [HttpPost("tasks")]
+        public async Task<ActionResult<List<lessonTask>>> GetAllTasks([FromBody] userTasksDTO data)
         {
-            return Ok(await _context.Task.ToListAsync());
+            //var tasks = await _context.Task.ToListAsync();
+            List<lessonTask> tasks = _context.UserTask
+                .Include(x => x.Task)
+                .Where(entry => entry.UserId == data.userId)
+                .Select(entry => entry.Task).ToList();
+
+            var filteredTasks = tasks.Where(x => !data.tasksToFilter.Contains(x.taskId));
+
+            return Ok(data.tasksToFilter != null && data.tasksToFilter.Length > 0 ? filteredTasks : tasks);
         }
 
         [HttpGet("{id}")]
@@ -53,8 +70,18 @@ namespace LanguageAppBackEnd.Controllers
                 int taskId = task.taskId;
                 await FileUploadind.SaveFileAsync("task", taskId, request.file);
             }
-            
-            return Ok(await _context.Task.ToListAsync());
+
+            UserTask userTask = new UserTask();
+            userTask.TaskId = task.taskId;
+            userTask.UserId = request.userId;
+
+            _context.UserTask.Add(userTask);
+            await _context.SaveChangesAsync();
+
+            return Ok( _context.UserTask
+                .Include(x => x.Task)
+                .Where(entry => entry.UserId == request.userId)
+                .Select(entry => entry.Task).ToList());
         }
 
         [HttpPut("{id}")]
@@ -74,20 +101,23 @@ namespace LanguageAppBackEnd.Controllers
             }
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.Task.ToListAsync());
+            return Ok(dbTask);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<List<lessonTask>>> DeleteTask(int id)
+        [HttpDelete("delete/{userId}/{taskId}")]
+        public async Task<ActionResult<List<lessonTask>>> DeleteTask(string userId, int taskId)
         {
-            var dbTask = await _context.Task.FindAsync(id);
+            var dbTask = await _context.Task.FindAsync(taskId);
             if (dbTask == null)
                 return BadRequest("Task not found.");
 
             _context.Task.Remove(dbTask);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.Task.ToListAsync());
+            return Ok(_context.UserTask
+            .Include(x => x.Task)
+                .Where(entry => entry.UserId == userId)
+                .Select(entry => entry.Task).ToList());
         }
     }
 }

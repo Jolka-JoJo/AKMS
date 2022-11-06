@@ -19,7 +19,6 @@ export class AppComponent {
       this.isUserAuthenticated = res;
       this.userName = this.userService.getUserName();
       this.role = this.userService.getUserRole();
-      //console.log("this.isUserAuthenticated", this.isUserAuthenticated)
     })
   }
 
@@ -29,7 +28,6 @@ export class AppComponent {
     .subscribe(res => {
       this.isUserAuthenticated = res;
     })
-    console.log(this.isUserAuthenticated);
   }
 
   public logout = () => {
