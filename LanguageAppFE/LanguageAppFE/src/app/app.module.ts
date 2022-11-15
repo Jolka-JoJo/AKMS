@@ -37,7 +37,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { AddTaskToLessonDialogComponent } from './lessons/add-task-to-lesson-dialog/add-task-to-lesson-dialog.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-
+import { StudentsComponent } from './students/students/students.component';
+import { AddStudentToLessonDialogComponent } from './students/add-student-to-lesson-dialog/add-student-to-lesson-dialog.component';
+import { TasksCompleteComponent } from './tasks/tasks-complete/tasks-complete.component';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -53,7 +56,10 @@ export function tokenGetter() {
     LessonsComponent,
     LessonViewComponent,
     UpdateProfileComponent,
-    AddTaskToLessonDialogComponent
+    AddTaskToLessonDialogComponent,
+    StudentsComponent,
+    AddStudentToLessonDialogComponent,
+    TasksCompleteComponent
   ],
   imports: [
     BrowserModule,
@@ -84,6 +90,7 @@ export function tokenGetter() {
     MatDialogModule,
     MatPaginatorModule,
     MatCheckboxModule,
+    MatProgressBarModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

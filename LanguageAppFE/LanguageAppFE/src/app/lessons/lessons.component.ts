@@ -16,11 +16,13 @@ export class LessonsComponent implements OnInit {
   });
   lessons:LessonResponse[] = [];
   userId!:string;
+  userRole!: string;
   constructor(private lessonService: LessonsService, private formBuilder: FormBuilder, private userService:UserService) { }
 
   ngOnInit(){
     this.userService.getUser().subscribe(user =>{
       this.userId = user.Id;
+      this.userRole = this.userService.getUserRole();
       this.lessonService.getAllLessons(user.Id).subscribe((res:any) => this.lessons = res);
 
     })

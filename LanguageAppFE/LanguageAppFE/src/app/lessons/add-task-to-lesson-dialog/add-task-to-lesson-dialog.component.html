@@ -31,8 +31,13 @@
         </ng-container>
 
         <ng-container matColumnDef="Task">
-          <th mat-header-cell *matHeaderCellDef> Užduotis </th>
+          <th mat-header-cell *matHeaderCellDef> Užduoties pavadinimas</th>
           <td mat-cell *matCellDef="let row"> {{row.taskTitle}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="TaskContent">
+          <th mat-header-cell *matHeaderCellDef> Užduotis </th>
+          <td mat-cell *matCellDef="let row"> {{row.taskContent}} </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

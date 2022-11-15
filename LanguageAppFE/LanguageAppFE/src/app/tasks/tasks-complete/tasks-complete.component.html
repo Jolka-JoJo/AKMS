@@ -1,0 +1,74 @@
+<div>
+  <div *ngIf = "lesson" class="complete-card">
+    <mat-card class="complete-card-content"  [ngClass]="{'correct': correctAnswer && nextVisible, 'incorrect': !correctAnswer && nextVisible}">
+      <mat-card-content class = "complete-form-content">
+        <section class="progress-section">
+          <mat-progress-bar
+              color="primary"
+              mode="determinate"
+              [value]="progress"
+              >
+          </mat-progress-bar>
+        </section>
+        <ng-container *ngFor="let task of lesson.tasks;let i = index">
+          <form [formGroup]="lessonCompleteForm" (ngSubmit)="nextVisible? next(i) : submit(i)" >
+
+            <div [hidden]="task.isHidden">
+              <div class = "task-title">
+                <h3>{{task.taskTitle}}</h3>
+                <mat-icon *ngIf="correctAnswer && nextVisible">thumb_up</mat-icon>
+                <mat-icon *ngIf="!correctAnswer && nextVisible">thumb_down</mat-icon>
+              </div>
+
+              <p>{{task.taskContent}}</p>
+              <div >
+                <!-- <h4 *ngIf="correctAnswer && nextVisible" class = "correct-message">Teisingai!</h4> -->
+                <div *ngIf="!correctAnswer && nextVisible">
+                  <!-- <h4 class = "incorrect-message">Suklydai</h4> -->
+                  <div class = "answer">
+                    <h4 class = "incorrect-answer">{{this.lessonCompleteForm.value.answer}}</h4>
+                    <h4 *ngFor="let answ of correctAnswers; let i = index" class = "answer-content"> {{answ.AnswerContent}}
+                      <span *ngIf ="correctAnswers.length != (i+1)" >/</span>
+                    </h4>
+                  </div>
+                </div>
+                <div *ngIf="correctAnswer && nextVisible">
+                  <!-- <h4 class = "incorrect-message">Suklydai</h4> -->
+                  <div class = "answer">
+                    <h4 class = "answer-content"> {{task.answers![0].AnswerContent}}</h4>
+                  </div>
+                </div>
+
+
+                <mat-form-field class="answer-input" *ngIf="!nextVisible && !correctAnswer">
+                  <mat-label>Atsakymas</mat-label>
+                  <input formControlName="answer" autocomplete="off" matInput  type="text">
+
+                  <!-- <input matInput formControlName="lessonTitle" type="text" placeholder="Užduoties pavadinimas"  name="lessonTilte" required> -->
+                </mat-form-field>
+              </div>
+              <div class = "next-buttton">
+                <!-- <button mat-raised-button color = "primary" (click) = "next(i)">Next</button> -->
+                <button *ngIf="!nextVisible" mat-raised-button color = "primary" type="submit">Pateikti</button>
+                <button *ngIf="nextVisible" mat-raised-button color = "primary" (onclick)="next(i)">Kitas</button>
+              </div>
+            </div>
+         </form>
+
+        </ng-container>
+        <div *ngIf="lessonEnd">
+          <div class = "lesson-completed">
+            <h2 class = "finish-h"> Pamoka baigta</h2>
+            <img class = "finish-img" src="..\..\..\assets\fire-cracker.png" alt = "pamoka baigta">
+          </div>
+          <div class = "back-button">
+            <a color="primary" mat-flat-button [routerLink]="'/lessons/'">
+              Grįžti į pamokų sąrašą
+            </a>
+          </div>
+
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

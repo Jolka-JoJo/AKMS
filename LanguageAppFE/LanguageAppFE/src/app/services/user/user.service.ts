@@ -21,6 +21,10 @@ export class UserService {
     return this.http.get<user[]>(this.baseUrl);
   }
 
+  getAllStudents(): Observable<user[]> {
+    return this.http.get<user[]>(this.baseUrl + "/students");
+  }
+
   getUser(): Observable<user> {
     return this.http.get<user>(this.baseUrl + "/" + this.getUserName());
   }

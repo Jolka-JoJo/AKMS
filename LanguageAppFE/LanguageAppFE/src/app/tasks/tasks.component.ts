@@ -16,6 +16,7 @@ export class TasksComponent implements OnInit, OnDestroy  {
   updateTaskId: number | undefined;
   taskTypes = taskType;
   userId!: string;
+  userRole!: string;
 
   taskAddingForm = this.formBuilder.group({
     taskTitle: new FormControl('', Validators.required),
@@ -36,12 +37,19 @@ export class TasksComponent implements OnInit, OnDestroy  {
 
   getAllTasks(){
     this.userService.getUser().subscribe(res => {
+      this.userRole = this.userService.getUserRole();
       this.userId = res.Id;
       var data: userTasksDTO ={
         userId: res.Id
       }
       this.tasksService.getAllTasks(data).subscribe((elements)=>{
-        this.lesssonTasks = elements;
+        elements.forEach(x =>{
+          var temp:LesssonTask = x.Task;
+          temp.learned = x.learned;
+          this.lesssonTasks.push(temp);
+        });
+        console.log(elements)
+
       })
     })
 

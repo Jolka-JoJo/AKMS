@@ -33,12 +33,14 @@ namespace LanguageAppBackEnd.Controllers
         public async Task<ActionResult<List<lessonTask>>> GetAllTasks([FromBody] userTasksDTO data)
         {
             //var tasks = await _context.Task.ToListAsync();
-            List<lessonTask> tasks = _context.UserTask
+            var tasks = _context.UserTask
                 .Include(x => x.Task)
+                .Include(x => x.Task.UserTask)
                 .Where(entry => entry.UserId == data.userId)
-                .Select(entry => entry.Task).ToList();
+                .Select(entry => new { entry.Task, entry.learned}).ToList();
 
-            var filteredTasks = tasks.Where(x => !data.tasksToFilter.Contains(x.taskId));
+            
+            var filteredTasks = tasks.Where(x => !data.tasksToFilter.Contains(x.Task.taskId));
 
             return Ok(data.tasksToFilter != null && data.tasksToFilter.Length > 0 ? filteredTasks : tasks);
         }
@@ -55,10 +57,10 @@ namespace LanguageAppBackEnd.Controllers
         [HttpPost]
         public async Task<ActionResult> AddTask([FromForm] TaskDTO request)
         {
-            
+
             lessonTask task = new lessonTask();
             task.taskTitle = request.taskTitle;
-            if(request.taskType != null) task.taskType = int.Parse(request.taskType);
+            if (request.taskType != null) task.taskType = int.Parse(request.taskType);
             task.taskContent = request.taskContent;
             if (request.file != null) task.taskImage = request.file.FileName;
 
@@ -78,14 +80,14 @@ namespace LanguageAppBackEnd.Controllers
             _context.UserTask.Add(userTask);
             await _context.SaveChangesAsync();
 
-            return Ok( _context.UserTask
+            return Ok(_context.UserTask
                 .Include(x => x.Task)
                 .Where(entry => entry.UserId == request.userId)
                 .Select(entry => entry.Task).ToList());
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<List<lessonTask>>> UpdateTask( int id, [FromForm] TaskDTO request)
+        public async Task<ActionResult<List<lessonTask>>> UpdateTask(int id, [FromForm] TaskDTO request)
         {
             var dbTask = await _context.Task.FindAsync(id);
             if (dbTask == null)
@@ -96,8 +98,8 @@ namespace LanguageAppBackEnd.Controllers
             if (request.taskType != null) dbTask.taskType = int.Parse(request.taskType);
             if (request.file != null)
             {
-                    dbTask.taskImage = request.file.FileName;
-                    await FileUploadind.SaveFileAsync("task", id, request.file);
+                dbTask.taskImage = request.file.FileName;
+                await FileUploadind.SaveFileAsync("task", id, request.file);
             }
             await _context.SaveChangesAsync();
 
@@ -119,5 +121,37 @@ namespace LanguageAppBackEnd.Controllers
                 .Where(entry => entry.UserId == userId)
                 .Select(entry => entry.Task).ToList());
         }
+
+        [HttpPost("addUser")]
+        public async Task<ActionResult<List<lessonTask>>> AddUser([FromBody] userTasksDTO request)
+        {
+            request.tasksIds.ToList().ForEach(id =>
+            {
+                UserTask userTask = new UserTask();
+                userTask.TaskId = id;
+                userTask.UserId = request.userId;
+                _context.UserTask.Add(userTask);
+
+            });
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+        
+        //[HttpPut("updateTaskUser")]
+        //public async Task<ActionResult<List<lessonTask>>> updateTaskUser([FromBody] userTasksDTO request)
+        //{
+        //    request.tasksIds.ToList().ForEach(id =>
+        //    {
+        //        UserTask userTask = new UserTask();
+        //        userTask.TaskId = id;
+        //        userTask.UserId = request.userId;
+        //        _context.UserTask.Add(userTask);
+
+        //    });
+
+        //    await _context.SaveChangesAsync();
+        //    return Ok();
+        //}
     }
 }

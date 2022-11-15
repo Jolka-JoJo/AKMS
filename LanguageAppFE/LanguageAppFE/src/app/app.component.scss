@@ -1,8 +1,7 @@
 
 .main-navbar-sidenav{
-    height: 100vh;
     .sidenav-container{
-      height: 100vh;
+      min-height: calc(100vh);
     }
 }
 .menu-spacer{
@@ -11,3 +10,4 @@
 .role-text, .role-username{
   font-size: medium;
 }
+

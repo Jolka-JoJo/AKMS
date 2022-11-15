@@ -1,0 +1,62 @@
+.complete-card{
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  .complete-card-content{
+    width: 600px;
+    .answer-input{
+      width: 100%;
+    }
+    .next-buttton{
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}
+.task-title{
+  display: flex;
+  justify-content: space-between;
+}
+.correct{
+  background-color: #cbe0c9;
+}
+
+.incorrect{
+  background-color: #fcd9d9;
+
+  .answer{
+    display: flex;
+    .incorrect-answer{
+      text-decoration: line-through;
+      margin-right: 8px;
+    }
+  }
+}
+.answer-content{
+  font-weight: 600;
+}
+
+.progress-section{
+  // margin: 10px auto;
+  margin-bottom: 20px;
+}
+
+.lesson-completed{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  .finish-h{
+    text-align: center;
+    margin: auto 0;
+  }
+  .finish-img{
+    margin-left: 8px;
+    width: 6%;
+  }
+}
+
+.back-button{
+  display: flex;
+  justify-content: flex-end;
+}

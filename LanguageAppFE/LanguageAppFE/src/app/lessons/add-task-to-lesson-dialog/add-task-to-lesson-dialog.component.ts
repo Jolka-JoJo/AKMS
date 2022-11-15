@@ -45,14 +45,18 @@ export class AddTaskToLessonDialogComponent implements OnInit {
         tasksToFilter: data.idsToFilter
       }
       this.taskService.getAllTasks(taskData).subscribe(res => {
-        this.tasks = res;
+        res.forEach(x =>{
+          this.tasks.push(x.Task);
+          console.log(x)
+        })
+        console.log(this.tasks)
         this.dataSource = new MatTableDataSource(this.tasks);
       });
     });
   }
 
-    displayedColumns: string[] = ['select', 'Nr', 'Task'];
-    tasks?: LesssonTask[] = [];
+    displayedColumns: string[] = ['select', 'Nr', 'Task', "TaskContent"];
+    tasks: LesssonTask[] = [];
 
     dataSource!: MatTableDataSource<LesssonTask>;
     selection = new SelectionModel<LesssonTask>(true, []);

@@ -1,14 +1,10 @@
 ﻿using AutoMapper;
-using LanguageAppBackEnd.dto;
 using LanguageAppBackEnd.Entities;
-using LanguageAppBackEnd.Facades;
 using LanguageAppBackEnd.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ServiceStack.Web;
-using System.Collections.Generic;
 
 namespace LanguageAppBackEnd.Controllers
 {
@@ -47,10 +43,22 @@ namespace LanguageAppBackEnd.Controllers
             lesson.status = DBlesson.status;
             lesson.lessonTitle = DBlesson.lessonTitle;
 
-            lesson.tasks = _context.LessonTaskLesson
-                .Include(x => x.Task)
-                .Where(entry => entry.LessonId == id)
-                .Select(entry => entry.Task).ToArray();
+            //lesson.tasks = _context.LessonTaskLesson
+            //    .Include(x => x.Task)
+            //    .Include(x => x.Task.answers)
+            //    .Where(entry => entry.LessonId == id)
+            //    .Select(entry => entry.Task).ToArray();
+
+
+            lesson.tasks = await (from task in _context.Task
+                                  join lessonTasks in _context.LessonTaskLesson
+                                  on  task.taskId equals lessonTasks.TaskId
+                                  join answers in _context.Answers
+                                  on task.taskId equals answers.lessonTaskId
+                                  where lessonTasks.LessonId == id
+                                  select task)
+                                 .ToArrayAsync();
+
 
             if (lesson == null)
                 return BadRequest("Lesson not found.");
@@ -58,6 +66,7 @@ namespace LanguageAppBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "teacher")]
         public async Task<List<Lesson>> AddLesson([FromForm] LessonDTO request)
         {
              Lesson lesson = new Lesson();
@@ -80,7 +89,9 @@ namespace LanguageAppBackEnd.Controllers
         }
 
         [HttpPost("addTask")]
-        public async Task<ActionResult> AddTaskToLesson([FromBody] AddTaskToLessonDTO request)
+        [Authorize(Roles = "teacher")]
+
+        public async Task<ActionResult> AddTaskToLesson([FromBody] AddToLessonDTO request)
         {
             request.tasksIds.ForEach(taskId =>
             {
@@ -94,7 +105,24 @@ namespace LanguageAppBackEnd.Controllers
             return Ok();
         }
 
+        [HttpPost("removeTask")]
+        [Authorize(Roles = "teacher")]
+
+        public async Task<ActionResult> RemoveTaskFromLesson([FromBody] RemoveFromLessonDTO request)
+        {
+            var lessonTaskLesson = new LessonTaskLesson();
+            if (request.lessonId == null || request.taskId == null) return BadRequest();
+            lessonTaskLesson.TaskId = (int)request.taskId;
+            lessonTaskLesson.LessonId= request.lessonId;
+            _context.LessonTaskLesson.Remove(lessonTaskLesson);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
         [HttpPut("{id}")]
+        [Authorize(Roles = "teacher")]
+
         public async Task<ActionResult<List<Lesson>>> UpdateLesson(int id, [FromForm] LessonDTO request)
         {
             if (request == null || !ModelState.IsValid)
@@ -113,6 +141,8 @@ namespace LanguageAppBackEnd.Controllers
         }
 
         [HttpDelete("delete/{userId}/{lessonId}")]
+        [Authorize(Roles = "teacher")]
+
         public async Task<ActionResult<List<Lesson>>> DeleteLesson(string userId, int lessonId)
         {
             var dbLesson = await _context.Lessons.FindAsync(lessonId);
@@ -128,16 +158,58 @@ namespace LanguageAppBackEnd.Controllers
                 .Select(entry => entry.Lesson).ToList());
         }
 
-        [HttpPost("{lessonId}/{userId}")]
-        public async Task<ActionResult> AddUserToLesson(int lessonId, string userId)
+        [HttpPost("addUsers")]
+        [Authorize(Roles = "teacher")]
+
+        public async Task<ActionResult> AddUserToLesson([FromBody] AddToLessonDTO request)
         {
-            var userLesson = new UserLesson();
-            userLesson.UserId = userId;
-            userLesson.LessonId = lessonId;
-            _context.UserLesson.Add(userLesson);
+            request.usersIds.ForEach(userId =>
+            {
+                var userLesson = new UserLesson();
+                userLesson.UserId = userId;
+                userLesson.LessonId = request.lessonId;
+                _context.UserLesson.Add(userLesson);
+            });
             await _context.SaveChangesAsync();
 
             return Ok();
+        }
+
+        [HttpPost("removeUser")]
+        [Authorize(Roles = "teacher")]
+
+        public async Task<ActionResult> RemoveUserFromLesson([FromBody] RemoveFromLessonDTO request)
+        {
+            var userLesson = new UserLesson();
+            if (request.lessonId == null || request.userId == null) return BadRequest();
+            userLesson.UserId = request.userId;
+            userLesson.LessonId = request.lessonId;
+            _context.UserLesson.Remove(userLesson);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpGet("getStudents/{lessonId}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "teacher")]
+
+        public async Task<ActionResult> GetLessonsStudents(int lessonId)
+        {
+
+            var users = await (from user in _context.Users
+                               join userRole in _context.UserRoles
+                               on user.Id equals userRole.UserId
+                               join role in _context.Roles
+                               on userRole.RoleId equals role.Id
+                               join userLesson in _context.UserLesson
+                               on user.Id equals userLesson.UserId
+                               where role.Name == "Student" 
+                               where userLesson.LessonId == lessonId
+                               select user)
+                                 .ToListAsync();
+
+            
+            return Ok(users);
         }
     }
 }

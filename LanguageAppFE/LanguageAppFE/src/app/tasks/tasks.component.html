@@ -1,7 +1,7 @@
 
   <div class = "task-main">
     <div>
-      <div class = "task-form">
+      <div *ngIf = "userRole === 'Mokytojas'" class = "task-form">
         <mat-card class="task-card">
           <mat-card-content class = "task-form-content">
             <form [formGroup]="taskAddingForm" (ngSubmit)="onSubmit()" >
@@ -50,27 +50,32 @@
                 <tr>
                   <th scope="col">Nr</th>
                   <th scope="col">Užduoties pavadinimas</th>
+                  <th scope="col">Užduotis</th>
+                  <th scope="col" *ngIf = "userRole === 'Mokinys'">Statusas</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let task of lesssonTasks; let i = index">
+                  <th scope="row"> {{ i + 1 }} </th>
+                  <td>{{ task.taskTitle }}</td>
+                  <td>{{ task.taskContent }}</td>
+                  <td *ngIf = "userRole === 'Mokinys'">{{task.learned? "Pakartota" : "Nepakartota"}}</td>
 
-                      <th scope="row"> {{ i + 1 }} </th>
-                      <td>{{ task.taskTitle }}</td>
-                      <td >
-                        <div class="task-table-actions">
-                        <div class="task-table-action">
+                  <td >
+                    <div class="task-table-actions">
+                      <div *ngIf = "userRole === 'Mokytojas'" class="task-table-action">
                         <a mat-list-item [routerLink]="'/tasks/' + task.taskId  +'/'">  <mat-icon >visibility</mat-icon> </a>
-
-                       </div>
-                       <!-- <div class="task-table-action">
-                        <a mat-list-item [routerLink]="'/'"> <mat-icon  (click)="selectUpdate(task)">edit</mat-icon> </a>
-                       </div> -->
-                       <div class="task-table-action">
+                      </div>
+                      <div *ngIf = "userRole === 'Mokytojas'" class="task-table-action">
                         <a mat-list-item secondary><mat-icon  (click)="onDelete(task.taskId!)">delete</mat-icon></a>
-                       </div>
-                        </div>
-                      </td>
+                      </div>
+                      <div *ngIf = "userRole === 'Mokinys'" class="task-table-action">
+                        <a color="primary" mat-flat-button [routerLink]="'/lessons/'">
+                          Pakartoti užduotį
+                        </a>
+                      </div>
+                    </div>
+                  </td>
                 </tr>
               </tbody>
             </table>

@@ -1,5 +1,5 @@
 import { UserService } from 'src/app/services/user/user.service';
-import { AddTaskToLessonRequest, LessonStatus, LessonStatusTranslated } from './../../interfaces/lesson';
+import { AddTaskToLessonRequest, AddUserToLessonRequest, LessonStatus, LessonStatusTranslated, RemoveTaskFromLessonRequest, RemoveUserFromLessonRequest } from './../../interfaces/lesson';
 import { LessonsService } from './../../services/lesson/lessons.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,6 +10,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddTaskToLessonDialogComponent } from '../add-task-to-lesson-dialog/add-task-to-lesson-dialog.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { LesssonTask } from 'src/app/models/task/task.module';
+import { AddStudentToLessonDialogComponent } from 'src/app/students/add-student-to-lesson-dialog/add-student-to-lesson-dialog.component';
+import { user } from 'src/app/models/task/user.module';
 
 @Component({
   selector: 'app-lesson-view',
@@ -24,7 +26,10 @@ export class LessonViewComponent implements OnInit {
     private tasksService: TasksService,
     private formBuilder: FormBuilder,
     public dialog: MatDialog,
-    public userService: UserService) { }
+    public userService: UserService) {
+      this.userRole = this.userService.getUserRole();
+      //this.displayedColumns = ['Nr', 'Task'];
+     }
 
     lessonId!: number;
     lesson!: LessonResponse;
@@ -32,7 +37,11 @@ export class LessonViewComponent implements OnInit {
     statuses = LessonStatusTranslated;
     status!: string;
     dataSource!: MatTableDataSource<LesssonTask>;
-    displayedColumns: string[] = ['Nr', 'Task'];
+    dataSourceStudent?: MatTableDataSource<user>;
+    displayedColumns?: string[] = ['Nr', 'Task', 'TaskContent', 'Delete'];
+    displayedColumnsStudent?: string[] = ['Nr', 'Student', 'Delete'];
+    lessonStudents?: user[];
+    userRole!: string;
     //userId!: string;
 
 
@@ -47,6 +56,11 @@ export class LessonViewComponent implements OnInit {
       this.lessonId = params['id'];
      });
      this.getLesson();
+     this.lessonService.getLessonStudents(this.lessonId).subscribe(res =>
+      {
+        this.lessonStudents = res;
+        this.dataSourceStudent = new MatTableDataSource(this.lessonStudents);
+      });
   }
 
   getLesson(){
@@ -139,8 +153,33 @@ export class LessonViewComponent implements OnInit {
         })
       }
 
-
+    });
+  }
+  openStudentDialog(){
+    var idsToFilter: number[] = []
+    //reikės jau pridėtus userius atfiltruoti
+    //this.lesson.tasks!.forEach(x => idsToFilter.push(x.taskId!));
+    const dialogRef = this.dialog.open(AddStudentToLessonDialogComponent, {
+      data: {
+        idsToFilter: idsToFilter
+      },
+    });
+    dialogRef.afterClosed().subscribe(result => {
       console.log(result);
+      if(result && result.length > 0){
+        var data: AddUserToLessonRequest ={
+          lessonId: this.lessonId,
+          usersIds: result.map((value:any) => value.Id)
+        };
+       this.lessonService.addUsersToLesson(data).subscribe(
+        lessonRes =>{
+         this.lessonService.getLessonStudents(this.lessonId)
+          .subscribe(res => {
+            this.lessonStudents = res;
+            this.dataSourceStudent = new MatTableDataSource(this.lessonStudents);
+          });
+       })
+      }
     });
   }
 
@@ -151,6 +190,25 @@ export class LessonViewComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+  removeTask(taskId: number){
+    var request:RemoveTaskFromLessonRequest = {
+      taskId: taskId,
+      lessonId: this.lessonId
+    }
+    this.lessonService.removeTaskFromLesson(request).subscribe(res => this.getLesson());
+  }
+
+  removeStudent(userId: string){
+    var request:RemoveUserFromLessonRequest = {
+      userId: userId,
+      lessonId: this.lessonId
+    }
+    this.lessonService.removeUserFromLesson(request).subscribe(res =>
+      this.lessonService.getLessonStudents(this.lessonId).subscribe(studentRes => {
+        this.lessonStudents = studentRes;
+        this.dataSourceStudent = new MatTableDataSource(this.lessonStudents);
+      }))
   }
 
 }

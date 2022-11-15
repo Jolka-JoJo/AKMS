@@ -4,9 +4,11 @@ using LanguageAppBackEnd.Interface;
 using LanguageAppBackEnd.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServiceStack.Web;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace LanguageAppBackEnd.Controllers
@@ -17,16 +19,32 @@ namespace LanguageAppBackEnd.Controllers
     public class UserController : Controller
     {
         private readonly DataContext _context;
+        private UserManager<User> _userManager { get; set; }
 
-        public UserController(DataContext context)
+        public UserController(DataContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<User>>> GetAllUsers()
         {
             return Ok( await _context.Users.ToListAsync());
+        }
+
+        [HttpGet("students")]
+        public async Task<ActionResult<List<User>>> GetAllStudents()
+        {
+            var users = await (from user in _context.Users
+                               join userRole in _context.UserRoles
+                               on user.Id equals userRole.UserId
+                               join role in _context.Roles
+                               on userRole.RoleId equals role.Id
+                               where role.Name == "Student"
+                               select user)
+                                 .ToListAsync();
+            return Ok(users);
         }
 
         //[HttpGet("{id}")]
@@ -47,31 +65,6 @@ namespace LanguageAppBackEnd.Controllers
                 return BadRequest("User not found.");
             return Ok(user.First());
         }
-
-        //[HttpPost]
-        //public async Task<ActionResult> AddUser([FromForm] UserDTO request)
-        //{
-        //    try
-        //    {
-        //        User user = new User();
-        //        //user.role = request.role;
-        //        user.UserName = request.username;
-        //        //user.Password = ( request.password);
-        //        user.LastName = request.surname;
-        //        user.FirstName = request.name;
-        //        user.userImage = request.userImage;
-        //        user.Email = request.email;
-        //        _context.Users.Add(user);
-        //        await _context.SaveChangesAsync();
-
-        //    }
-        //    catch (Exception e)
-        //    {
-
-        //    }
-
-        //    return Ok(await _context.Users.ToListAsync());
-        //}
 
         [HttpPut("profile")]
         public async Task<ActionResult<List<User>>> UpdateUser([FromBody] UserForProfileDTO request)

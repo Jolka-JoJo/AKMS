@@ -1,3 +1,4 @@
+import { user } from '../models/task/user.module';
 import { LesssonTask } from './../models/task/task.module';
 
 export interface LessonRequest{
@@ -14,11 +15,27 @@ export interface LessonResponse{
   createdDate?: Date;
   taskId?: number;
   tasks?: LesssonTask[];
+  students?: user[];
 }
 
 export interface AddTaskToLessonRequest{
   lessonId: number,
   tasksIds: number[]
+}
+
+export interface RemoveTaskFromLessonRequest{
+  lessonId: number,
+  taskId: number
+}
+
+export interface AddUserToLessonRequest{
+  lessonId: number,
+  usersIds: string[]
+}
+
+export interface RemoveUserFromLessonRequest{
+  lessonId: number,
+  userId: string
 }
 
 export enum LessonStatus{

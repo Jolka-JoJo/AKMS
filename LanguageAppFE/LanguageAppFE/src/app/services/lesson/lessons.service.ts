@@ -2,8 +2,9 @@ import { UserService } from 'src/app/services/user/user.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AddTaskToLessonRequest, LessonResponse } from 'src/app/interfaces/lesson';
+import { AddTaskToLessonRequest, AddUserToLessonRequest, LessonResponse, RemoveTaskFromLessonRequest, RemoveUserFromLessonRequest } from 'src/app/interfaces/lesson';
 import { EnvironmentUrlService } from '../environment-url.service';
+import { user } from 'src/app/models/task/user.module';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,23 @@ export class LessonsService {
   addTasksToLesson(data: AddTaskToLessonRequest): Observable<LessonResponse[]>{
     return this.http.post<LessonResponse[]>(this.url + "/addTask" , data);
   }
+
+  removeTaskFromLesson(data: RemoveTaskFromLessonRequest): Observable<LessonResponse[]>{
+    return this.http.post<LessonResponse[]>(this.url + "/removeTask" , data);
+  }
+
+  addUsersToLesson(data: AddUserToLessonRequest): Observable<any[]>{
+    return this.http.post<any[]>(this.url + "/addUsers" , data);
+  }
+
+  getLessonStudents(lessonId: number): Observable<any[]>{
+    return this.http.get<any[]>(this.url + "/getStudents/" + lessonId);
+  }
+
+  removeUserFromLesson(data: RemoveUserFromLessonRequest): Observable<LessonResponse[]>{
+    return this.http.post<LessonResponse[]>(this.url + "/removeUser" , data);
+  }
+
   private createCompleteRoute = (route: string, envAddress: string) => {
     return `${envAddress}/${route}`;
   }

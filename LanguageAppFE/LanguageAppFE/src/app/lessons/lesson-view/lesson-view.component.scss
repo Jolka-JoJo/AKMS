@@ -23,9 +23,12 @@
       }
     }
   }
-  .dialog-button{
+  .dialog-buttons{
     display: flex;
     justify-content: flex-end;
+    .dialog-button{
+      margin-left: 5px;
+    }
   }
 
   .lesson-card-content{
@@ -59,15 +62,28 @@
 
 
 }
+
 table {
   width: 100%;
+
+  .task-delete{
+    display: flex;
+    justify-content: flex-end;
+    .task-delete-icon{
+      cursor: pointer;
+    }
+  }
 }
 
 .mat-form-field {
   font-size: 14px;
-  width: 100%;
+  width: 90%;
 }
+.mat-form-field{
 
+  margin-left: 10px;
+  margin-right: 10px;
+}
 
 @media only screen and (max-width: 600px) {
   .lesson-view-content {

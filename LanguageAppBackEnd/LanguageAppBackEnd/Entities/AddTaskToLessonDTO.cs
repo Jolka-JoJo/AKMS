@@ -1,8 +1,9 @@
 ﻿namespace LanguageAppBackEnd.Entities
 {
-    public class AddTaskToLessonDTO
+    public class AddToLessonDTO
     {
         public int lessonId {get; set;}
-        public List<int> tasksIds {get; set;}
+        public List<int>? tasksIds {get; set;}
+        public List<string>? usersIds {get; set;}
     }
 }

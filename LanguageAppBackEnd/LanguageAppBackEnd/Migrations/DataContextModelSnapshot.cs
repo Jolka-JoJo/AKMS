@@ -195,6 +195,18 @@ namespace LanguageAppBackEnd.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime?>("assignedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("completedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("score")
+                        .HasColumnType("int");
+
+                    b.Property<int>("status")
+                        .HasColumnType("int");
+
                     b.HasKey("LessonId", "UserId");
 
                     b.HasIndex("UserId");
@@ -209,6 +221,9 @@ namespace LanguageAppBackEnd.Migrations
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool?>("learned")
+                        .HasColumnType("bit");
 
                     b.HasKey("TaskId", "UserId");
 
@@ -246,15 +261,15 @@ namespace LanguageAppBackEnd.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "dba3f35c-2570-4146-8454-9e26eeec3ffa",
-                            ConcurrencyStamp = "e2b842b1-807f-4ee8-a6c0-847be4ea05b3",
+                            Id = "63428096-cbef-4d6f-8e9e-b6fe50cfaea8",
+                            ConcurrencyStamp = "3b9a0b72-b7f9-4a8b-afdf-c002ef2bad5e",
                             Name = "Student",
                             NormalizedName = "STUDENT"
                         },
                         new
                         {
-                            Id = "dc7dd0fd-2974-417d-9ba1-afe6c1e0fc3f",
-                            ConcurrencyStamp = "459d3e9c-a5a0-4b30-9b58-c9598d320ce5",
+                            Id = "b348396a-d456-4bca-9985-17c94ce98901",
+                            ConcurrencyStamp = "6f66ea88-cf93-41c6-a167-706ebbb1e491",
                             Name = "teacher",
                             NormalizedName = "TEACHER"
                         });

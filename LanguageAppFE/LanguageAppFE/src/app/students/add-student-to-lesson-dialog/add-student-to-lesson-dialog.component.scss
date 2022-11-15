@@ -1,0 +1,22 @@
+table {
+  width: 100%;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.main-dialog{
+  width: 1000px;
+
+  .mat-column-select{
+    width: 0;
+    padding-right: 15px;
+  }
+
+  .dialog-action-buttons{
+    display: flex;
+    justify-content: flex-end;
+  }
+}

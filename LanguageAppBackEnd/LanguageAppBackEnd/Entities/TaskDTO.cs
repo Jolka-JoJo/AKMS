@@ -16,6 +16,7 @@ namespace LanguageAppBackEnd.dto
         public string? taskContent { get; set; }
 
         public string? userId { get; set; }
+        public string? learned { get; set; }
 
     }
 }

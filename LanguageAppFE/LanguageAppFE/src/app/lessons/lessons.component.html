@@ -1,7 +1,10 @@
 
+
   <div class = "lesson-main">
     <div>
-      <div class = "lesson-form">
+      <h1>Pamokos</h1>
+      <h3 *ngIf = "userRole === 'Mokytojas'" >Pridėkite pamoką</h3>
+      <div *ngIf = "userRole === 'Mokytojas'" class = "lesson-form">
         <mat-card class="lesson-card">
           <mat-card-content class = "lesson-form-content">
             <form [formGroup]="lessonForm" (ngSubmit)="onSubmit()" >
@@ -18,7 +21,7 @@
           </mat-card-content>
         </mat-card>
       </div>
-
+      <h3>Visų pamokų sąrašas</h3>
       <mat-card  class="lesson-card">
         <mat-card-content>
           <div class="all-lesson-table">
@@ -36,16 +39,20 @@
                       <td>{{ lesson.lessonTitle }}</td>
                       <td >
                         <div class="lesson-table-actions">
-                        <div class="lesson-table-action">
-                        <a mat-list-item [routerLink]="'/lessons/' + lesson.lessonId  +'/'">  <mat-icon >visibility</mat-icon> </a>
-
-                       </div>
-                       <!-- <div class="lesson-table-action">
-                        <a mat-list-item [routerLink]="'/'"> <mat-icon  (click)="selectUpdate(lesson)">edit</mat-icon> </a>
-                       </div> -->
-                       <div class="lesson-table-action">
-                        <a mat-list-item secondary><mat-icon  (click)="onDelete(lesson.lessonId!)">delete</mat-icon></a>
-                       </div>
+                          <div *ngIf = "userRole === 'Mokytojas'" class="lesson-table-action">
+                            <a mat-list-item [routerLink]="'/lessons/' + lesson.lessonId  +'/'">
+                              <mat-icon >visibility</mat-icon>
+                            </a>
+                          </div>
+                          <div *ngIf = "userRole === 'Mokinys'"class = "lesson-table-action">
+                              <!-- <button mat-raised-button color="primary" (click)="">Spręsti užduotis</button> -->
+                              <a color="primary" mat-flat-button [routerLink]="'/lessons/' + lesson.lessonId  +'/complete/'">
+                                Spręsti užduotis
+                              </a>
+                          </div>
+                          <div *ngIf = "userRole === 'Mokytojas'" class="lesson-table-action">
+                            <a mat-list-item secondary><mat-icon  (click)="onDelete(lesson.lessonId!)">delete</mat-icon></a>
+                          </div>
                         </div>
                       </td>
                 </tr>
