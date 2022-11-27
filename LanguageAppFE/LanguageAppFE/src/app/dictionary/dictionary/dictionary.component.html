@@ -1,0 +1,142 @@
+<div class="dictionary-main">
+
+  <div class="dictionary-form">
+    <h1>Žodynėlis</h1>
+      <div class="dictionary-first-line">
+        <h3>Pridėkite žodžius ar frazes</h3>
+        <a color="primary" class="practise-button" mat-flat-button [routerLink]="'/dictionary/practise/'">
+          Praktikuotis žodžius
+        </a>
+      </div>
+    <mat-card class="dictionary-card">
+      <mat-card-content class = "dictionary-form-content">
+        <form [formGroup]="form" (ngSubmit)="updateMode ? onUpdate(formDirective) : onSubmit(formDirective)" #formDirective="ngForm">
+          <div >
+            <mat-form-field class="dictionary-form-field full-width">
+              <mat-label>Žodis ar frazė</mat-label>
+              <input matInput formControlName="word" type="text" placeholder="Žodis ar frazė"  name="word" required>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="dictionary-form-field full-width">
+              <mat-label>Vertimas</mat-label>
+              <input  matInput formControlName="translation" type="text" placeholder="Vertimas" name="translation" required>
+            </mat-form-field>
+          </div>
+
+          <div>
+            <mat-form-field class="dictionary-form-field full-width">
+              <mat-label>Definicija</mat-label>
+              <input  matInput formControlName="definition" type="text" placeholder="Definicija" name="definition">
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="dictionary-form-field full-width" appearance="fill">
+              <mat-label>Kategorija</mat-label>
+              <mat-select formControlName = "categories" multiple>
+                <mat-option *ngFor="let category of categories" [value]="category">{{category.CategoryName}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+            <div>
+              <div *ngFor="let control of  newCategoriesAsFormArray.controls ;let i = index;" formArrayName='newCategories' >
+                <div [formGroupName]="i" >
+                    <div  class="input-field newCategory-field" >
+                      <mat-form-field class="dictionary-form-field full-width">
+                        <mat-label>Kategorija</mat-label>
+                        <input  matInput formControlName="newCategory" type="text" placeholder="Kategorija" name="newCategory" required>
+                      </mat-form-field>
+                      <button class="newCategory-delete-button" type="button" mat-raised-button color="warn" (click)="remove(i)" >Pašalinti</button>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="newCategory-add-button">
+              <button type="button" mat-raised-button (click)="addControl()" >Pridėti naują kategoriją</button>
+            </div>
+
+          </div>
+          <div class="dictionary-form-button">
+            <button [disabled]="!form!.valid" type="submit" mat-raised-button color="primary">{{updateMode ? 'Atnaujinti' : 'Pridėti'}}</button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<div>
+
+  <h3 class="all-words">Visi žodžiai</h3>
+  <div class="mat-elevation-z8" class="dictionary-card">
+    <mat-form-field class = "table-filter-input" appearance="standard">
+      <mat-label>Ieškoti</mat-label>
+      <input matInput (keyup)="applyFilter($event)" #input>
+    </mat-form-field>
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="Nr" class = "table-row-position">
+        <th mat-header-cell *matHeaderCellDef> Nr </th>
+        <td mat-cell *matCellDef="let row"> {{dataSource.filteredData.indexOf(row) + 1}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="Word">
+        <th mat-header-cell *matHeaderCellDef> Žodis arba frazė </th>
+        <td mat-cell *matCellDef="let row"> {{row.wordPhraseContent}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Translation">
+        <th mat-header-cell *matHeaderCellDef> Vertimas </th>
+        <td mat-cell *matCellDef="let row"> {{row.translation}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Definition">
+        <th mat-header-cell *matHeaderCellDef> Definicija </th>
+        <td mat-cell *matCellDef="let row"> {{row.definition}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Categories">
+        <th mat-header-cell *matHeaderCellDef> Kategorija </th>
+        <td mat-cell *matCellDef="let row">
+          <span *ngFor="let category of row.categoriesList as any; let i = index">
+           {{category.CategoryName}} <span *ngIf="row.categoriesList && row.categoriesList.length!= i + 1">,</span>
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Delete" >
+        <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row" >
+            <div class="dictionary-delete">
+
+              <div>
+                <div  class="dictionary-delete-icon">
+                  <a mat-list-item secondary><mat-icon  (click)="onEdit(row.wordPhraseId!)">edit</mat-icon></a>
+                </div>
+              </div>
+              <div>
+                <div  class="dictionary-delete-icon">
+                  <a mat-list-item secondary><mat-icon  (click)="onDelete(row.wordPhraseId!)">delete</mat-icon></a>
+                </div>
+              </div>
+            </div>
+
+          </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4"> Nėra duomenų </td>
+      </tr>
+    </table>
+    <mat-paginator
+                [length]="dataSource ? dataSource.data.length : 0"
+                showFirstLastButtons
+                [pageSizeOptions]="[5, 10, 25]"
+                aria-label="Pasirinkite puslapį">
+    </mat-paginator>
+  </div>
+</div>
+

@@ -80,6 +80,7 @@ namespace LanguageAppBackEnd.Controllers
 
             return Ok(dbUser);
         }
+
         [HttpPut("password")]
         public async Task<ActionResult<List<User>>> UpdateUserPassword([FromBody] UserPasswordDTO request)
         {

@@ -123,7 +123,7 @@ namespace LanguageAppBackEnd.Controllers
         }
 
         [HttpPost("addUser")]
-        public async Task<ActionResult<List<lessonTask>>> AddUser([FromBody] userTasksDTO request)
+        public async Task<ActionResult<List<lessonTask>>> AddUserToTask([FromBody] userTasksDTO request)
         {
             request.tasksIds.ToList().ForEach(id =>
             {
@@ -137,7 +137,23 @@ namespace LanguageAppBackEnd.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
-        
+
+        [HttpDelete("removeUser/{userId}/{taskId}")]
+        public async Task<ActionResult<List<lessonTask>>> RemoveUserFromTask(string userId, int taskId)
+        {
+            var dbTask = await _context.Task.FindAsync(taskId);
+            if (dbTask == null)
+                return BadRequest("Task not found.");
+
+            _context.Task.Remove(dbTask);
+            await _context.SaveChangesAsync();
+
+            return Ok(_context.UserTask
+            .Include(x => x.Task)
+                .Where(entry => entry.UserId == userId)
+                .Select(entry => entry.Task).ToList());
+        }
+
         //[HttpPut("updateTaskUser")]
         //public async Task<ActionResult<List<lessonTask>>> updateTaskUser([FromBody] userTasksDTO request)
         //{

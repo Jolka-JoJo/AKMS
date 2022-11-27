@@ -2,15 +2,11 @@ global using LanguageAppBackEnd.Data;
 using LanguageAppBackEnd.JwtFeatures;
 using LanguageAppBackEnd.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
-using System.Text.Json;
-using ServiceStack;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,7 +45,7 @@ builder.Services.AddIdentity<User, IdentityRole>(opt =>
     opt.Password.RequireDigit = false;
     opt.Password.RequireUppercase = false;
     opt.Password.RequireNonAlphanumeric = false;
-    opt.User.RequireUniqueEmail = false;
+    opt.User.RequireUniqueEmail = true;
 })
     .AddEntityFrameworkStores<DataContext>()
     .AddDefaultTokenProviders();

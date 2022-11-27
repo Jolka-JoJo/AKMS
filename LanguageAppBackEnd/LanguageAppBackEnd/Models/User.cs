@@ -17,5 +17,6 @@ namespace LanguageAppBackEnd.Models
         public string Password { get; set; }
         public virtual ICollection<UserLesson> UserLesson { get; set; }
         public virtual ICollection<UserTask> UserTask { get; set; }
+        public ICollection<WordPhrase> wordPhrases { get; set; }
     }
 }

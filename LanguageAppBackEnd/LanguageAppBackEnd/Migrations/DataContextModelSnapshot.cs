@@ -47,6 +47,47 @@ namespace LanguageAppBackEnd.Migrations
                     b.ToTable("Answers");
                 });
 
+            modelBuilder.Entity("LanguageAppBackEnd.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"), 1L, 1);
+
+                    b.Property<short?>("Area")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CategoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("LanguageAppBackEnd.Models.CategoryWord", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WordPhraseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CategoryId", "WordPhraseId");
+
+                    b.HasIndex("WordPhraseId");
+
+                    b.ToTable("CategoryWords");
+                });
+
             modelBuilder.Entity("LanguageAppBackEnd.Models.Lesson", b =>
                 {
                     b.Property<int>("lessonId")
@@ -232,6 +273,35 @@ namespace LanguageAppBackEnd.Migrations
                     b.ToTable("UserTask");
                 });
 
+            modelBuilder.Entity("LanguageAppBackEnd.Models.WordPhrase", b =>
+                {
+                    b.Property<int>("wordPhraseId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("wordPhraseId"), 1L, 1);
+
+                    b.Property<string>("definition")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("translation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("userId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("wordPhraseContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("wordPhraseId");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("WordPhrases");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -261,15 +331,15 @@ namespace LanguageAppBackEnd.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "63428096-cbef-4d6f-8e9e-b6fe50cfaea8",
-                            ConcurrencyStamp = "3b9a0b72-b7f9-4a8b-afdf-c002ef2bad5e",
+                            Id = "45046b40-669f-4758-8d03-b724ef197159",
+                            ConcurrencyStamp = "2fe7b48f-495e-432c-9aec-f892d878c4e6",
                             Name = "Student",
                             NormalizedName = "STUDENT"
                         },
                         new
                         {
-                            Id = "b348396a-d456-4bca-9985-17c94ce98901",
-                            ConcurrencyStamp = "6f66ea88-cf93-41c6-a167-706ebbb1e491",
+                            Id = "b7f47752-c6f4-457b-9df3-5da68bc28bb3",
+                            ConcurrencyStamp = "639e7612-90da-45a2-a072-1d02079f106a",
                             Name = "teacher",
                             NormalizedName = "TEACHER"
                         });
@@ -392,6 +462,36 @@ namespace LanguageAppBackEnd.Migrations
                     b.Navigation("lessonTask");
                 });
 
+            modelBuilder.Entity("LanguageAppBackEnd.Models.Category", b =>
+                {
+                    b.HasOne("LanguageAppBackEnd.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LanguageAppBackEnd.Models.CategoryWord", b =>
+                {
+                    b.HasOne("LanguageAppBackEnd.Models.Category", "Category")
+                        .WithMany("CategoryWords")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LanguageAppBackEnd.Models.WordPhrase", "WordPhrase")
+                        .WithMany("CategoryWords")
+                        .HasForeignKey("WordPhraseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("WordPhrase");
+                });
+
             modelBuilder.Entity("LanguageAppBackEnd.Models.LessonTaskLesson", b =>
                 {
                     b.HasOne("LanguageAppBackEnd.Models.Lesson", "Lesson")
@@ -449,6 +549,15 @@ namespace LanguageAppBackEnd.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("LanguageAppBackEnd.Models.WordPhrase", b =>
+                {
+                    b.HasOne("LanguageAppBackEnd.Models.User", "user")
+                        .WithMany("wordPhrases")
+                        .HasForeignKey("userId");
+
+                    b.Navigation("user");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -500,6 +609,11 @@ namespace LanguageAppBackEnd.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("LanguageAppBackEnd.Models.Category", b =>
+                {
+                    b.Navigation("CategoryWords");
+                });
+
             modelBuilder.Entity("LanguageAppBackEnd.Models.Lesson", b =>
                 {
                     b.Navigation("LessonTaskLesson");
@@ -521,6 +635,13 @@ namespace LanguageAppBackEnd.Migrations
                     b.Navigation("UserLesson");
 
                     b.Navigation("UserTask");
+
+                    b.Navigation("wordPhrases");
+                });
+
+            modelBuilder.Entity("LanguageAppBackEnd.Models.WordPhrase", b =>
+                {
+                    b.Navigation("CategoryWords");
                 });
 #pragma warning restore 612, 618
         }

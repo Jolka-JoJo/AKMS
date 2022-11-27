@@ -1,7 +1,7 @@
 import { UserService } from 'src/app/services/user/user.service';
 import { AddTaskToLessonRequest, AddUserToLessonRequest, LessonStatus, LessonStatusTranslated, RemoveTaskFromLessonRequest, RemoveUserFromLessonRequest } from './../../interfaces/lesson';
 import { LessonsService } from './../../services/lesson/lessons.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TasksService } from 'src/app/services/task/tasks.service';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -12,6 +12,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { LesssonTask } from 'src/app/models/task/task.module';
 import { AddStudentToLessonDialogComponent } from 'src/app/students/add-student-to-lesson-dialog/add-student-to-lesson-dialog.component';
 import { user } from 'src/app/models/task/user.module';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-lesson-view',
@@ -37,18 +38,17 @@ export class LessonViewComponent implements OnInit {
     statuses = LessonStatusTranslated;
     status!: string;
     dataSource!: MatTableDataSource<LesssonTask>;
+    @ViewChild(MatPaginator) paginator1!: MatPaginator;
+    @ViewChild(MatPaginator) paginator2!: MatPaginator;
     dataSourceStudent?: MatTableDataSource<user>;
+    pageEvent?: PageEvent;
     displayedColumns?: string[] = ['Nr', 'Task', 'TaskContent', 'Delete'];
     displayedColumnsStudent?: string[] = ['Nr', 'Student', 'Delete'];
     lessonStudents?: user[];
     userRole!: string;
-    //userId!: string;
-
 
     lessonUpdatingForm = this.formBuilder.group({
-      lessonTitle: ['', Validators.required],
-      status: [''],
-      // taskId: [''],
+      lessonTitle: ['', Validators.required]
     });
 
   ngOnInit(): void {
@@ -60,6 +60,7 @@ export class LessonViewComponent implements OnInit {
       {
         this.lessonStudents = res;
         this.dataSourceStudent = new MatTableDataSource(this.lessonStudents);
+       // this.dataSourceStudent = new MatTableDataSource<LessonResponse>(this.lessonStudents);;
       });
   }
 
@@ -67,49 +68,19 @@ export class LessonViewComponent implements OnInit {
     this.lessonService.getLesson(this.lessonId).subscribe(response =>
       {
         this.lesson = response;
-        this.dataSource = new MatTableDataSource(this.lesson.tasks);
-
-        this.status = LessonStatusTranslated[response.status! as keyof typeof this.statuses];
-        const statusStyles = document.getElementById('lessonStatus');
-        if(statusStyles){
-          switch (this.status){
-            case this.statuses[1]:
-              statusStyles.style.backgroundColor = "rgba(255, 242, 0, 0.8)";
-              break;
-            case this.statuses[2]:
-              statusStyles.style.backgroundColor = "rgba(0, 128, 0, 0.8)"
-              break;
-            case this.statuses[3]:
-              statusStyles.style.backgroundColor = "grey"
-              break;
-          }
-        }
+       // this.dataSource = new MatTableDataSource(this.lesson.tasks);
+        this.dataSource = new MatTableDataSource<LesssonTask>(this.lesson.tasks);
+        this.dataSource.paginator = this.paginator1;
       });
   }
 
   onUpdate(){
     var formData = new FormData();
     formData.append('lessonTitle',  this.lessonUpdatingForm.value.lessonTitle!);
-    formData.append('status', (this.lessonUpdatingForm.value.status!));
     formData.append('lessonId', this.lessonId!.toString());
     this.lessonService.updateLesson(this.lessonId, formData).subscribe((response: any) =>
     {
       this.lesson = response;
-      this.status = LessonStatusTranslated[this.lesson.status! as keyof typeof this.statuses];
-      const statusStyles = document.getElementById('lessonStatus');
-      if(statusStyles){
-        switch (this.status){
-          case this.statuses[1]:
-            statusStyles.style.backgroundColor = "rgba(255, 242, 0, 0.8)";
-            break;
-          case this.statuses[2]:
-            statusStyles.style.backgroundColor = "rgba(0, 128, 0, 0.5)"
-            break;
-          case this.statuses[3]:
-            statusStyles.style.backgroundColor = "rgba(128, 128, 128, 0.5)"
-            break;
-        }
-      }
     });
     this.update = false;
   }
@@ -117,7 +88,6 @@ export class LessonViewComponent implements OnInit {
   updateOpen(){
     this.update = true;
     this.lessonUpdatingForm.controls['lessonTitle'].setValue(this.lesson.lessonTitle);
-    this.lessonUpdatingForm.controls['status'].setValue(this.lesson.status!.toString());
   }
 
   onDelete(id: number){
@@ -191,6 +161,7 @@ export class LessonViewComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
   removeTask(taskId: number){
     var request:RemoveTaskFromLessonRequest = {
       taskId: taskId,
@@ -207,7 +178,9 @@ export class LessonViewComponent implements OnInit {
     this.lessonService.removeUserFromLesson(request).subscribe(res =>
       this.lessonService.getLessonStudents(this.lessonId).subscribe(studentRes => {
         this.lessonStudents = studentRes;
-        this.dataSourceStudent = new MatTableDataSource(this.lessonStudents);
+
+        this.dataSourceStudent = new MatTableDataSource<user>(this.lessonStudents);
+        this.dataSourceStudent.paginator = this.paginator2;
       }))
   }
 

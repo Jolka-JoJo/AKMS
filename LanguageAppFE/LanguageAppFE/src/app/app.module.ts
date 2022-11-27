@@ -41,6 +41,9 @@ import { StudentsComponent } from './students/students/students.component';
 import { AddStudentToLessonDialogComponent } from './students/add-student-to-lesson-dialog/add-student-to-lesson-dialog.component';
 import { TasksCompleteComponent } from './tasks/tasks-complete/tasks-complete.component';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { DictionaryComponent } from './dictionary/dictionary/dictionary.component';
+import { PractiseWordsComponent } from './dictionary/practise-words/practise-words.component';
+import { CategoryChoiceDialogComponent } from './dictionary/category-choice-dialog/category-choice-dialog.component';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -59,7 +62,10 @@ export function tokenGetter() {
     AddTaskToLessonDialogComponent,
     StudentsComponent,
     AddStudentToLessonDialogComponent,
-    TasksCompleteComponent
+    TasksCompleteComponent,
+    DictionaryComponent,
+    PractiseWordsComponent,
+    CategoryChoiceDialogComponent
   ],
   imports: [
     BrowserModule,

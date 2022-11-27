@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using LanguageAppBackEnd.dto;
 using LanguageAppBackEnd.Entities;
 using LanguageAppBackEnd.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LanguageAppBackEnd.Controllers
 {
@@ -40,24 +43,31 @@ namespace LanguageAppBackEnd.Controllers
             lesson.lessonId = DBlesson.lessonId;
             lesson.lessonTitle = DBlesson.lessonTitle;
             lesson.createdDate = DBlesson.createdDate;
-            lesson.status = DBlesson.status;
             lesson.lessonTitle = DBlesson.lessonTitle;
 
-            //lesson.tasks = _context.LessonTaskLesson
-            //    .Include(x => x.Task)
-            //    .Include(x => x.Task.answers)
-            //    .Where(entry => entry.LessonId == id)
-            //    .Select(entry => entry.Task).ToArray();
 
-
-            lesson.tasks = await (from task in _context.Task
+            var data =  await (from task in _context.Task
                                   join lessonTasks in _context.LessonTaskLesson
-                                  on  task.taskId equals lessonTasks.TaskId
+                                  on task.taskId equals lessonTasks.TaskId
                                   join answers in _context.Answers
                                   on task.taskId equals answers.lessonTaskId
                                   where lessonTasks.LessonId == id
-                                  select task)
-                                 .ToArrayAsync();
+                                  select new
+                                  {
+                                      task,
+                                      answers
+                                  })
+                                 .ToListAsync();
+            //Thread.Sleep(1000);
+            lesson.tasks = new List<lessonTask>();
+
+            foreach (var values in data)
+            {
+                lessonTask temp = values.task;
+                temp.answers.Add(values.answers);
+                lesson.tasks.Add(temp);
+                
+            }
 
 
             if (lesson == null)
@@ -133,7 +143,6 @@ namespace LanguageAppBackEnd.Controllers
                 return BadRequest("Lesson not found.");
 
             dbLesson.lessonTitle = request.lessonTitle;
-            dbLesson.status = request.status.Value;
             
             await _context.SaveChangesAsync();
 

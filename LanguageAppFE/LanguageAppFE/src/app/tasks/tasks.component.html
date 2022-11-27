@@ -1,6 +1,9 @@
 
   <div class = "task-main">
+
     <div>
+      <h1>Užduotys</h1>
+      <h3 *ngIf = "userRole === 'Mokytojas'" >Pridėkite užduotį</h3>
       <div *ngIf = "userRole === 'Mokytojas'" class = "task-form">
         <mat-card class="task-card">
           <mat-card-content class = "task-form-content">
@@ -41,33 +44,38 @@
           </mat-card-content>
         </mat-card>
       </div>
+        <h3>Visų užduočių sąrašas</h3>
+        <div class="mat-elevation-z8" class="task-card">
 
-      <mat-card  class="task-card">
-        <mat-card-content>
-          <div class="all-task-table">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Nr</th>
-                  <th scope="col">Užduoties pavadinimas</th>
-                  <th scope="col">Užduotis</th>
-                  <th scope="col" *ngIf = "userRole === 'Mokinys'">Statusas</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let task of lesssonTasks; let i = index">
-                  <th scope="row"> {{ i + 1 }} </th>
-                  <td>{{ task.taskTitle }}</td>
-                  <td>{{ task.taskContent }}</td>
-                  <td *ngIf = "userRole === 'Mokinys'">{{task.learned? "Pakartota" : "Nepakartota"}}</td>
+            <mat-form-field class = "table-filter-input" appearance="standard">
+              <mat-label>Ieškoti</mat-label>
+              <input matInput (keyup)="applyFilter($event)" #input>
+            </mat-form-field>
+            <table mat-table [dataSource]="dataSource">
+              <ng-container matColumnDef="Nr" class = "table-row-position">
+                <th mat-header-cell *matHeaderCellDef> Nr </th>
+                <td mat-cell *matCellDef="let row"> {{dataSource.filteredData.indexOf(row) + 1}}</td>
+              </ng-container>
 
-                  <td >
+              <ng-container matColumnDef="Task">
+                <th mat-header-cell *matHeaderCellDef> Užduoties pavadinimas </th>
+                <td mat-cell *matCellDef="let row"> {{row.taskTitle}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="TaskContent">
+                <th mat-header-cell *matHeaderCellDef> Užduotis </th>
+                <td mat-cell *matCellDef="let row"> {{row.taskContent}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Delete" >
+                <th mat-header-cell *matHeaderCellDef></th>
+                  <td mat-cell *matCellDef="let row" >
                     <div class="task-table-actions">
                       <div *ngIf = "userRole === 'Mokytojas'" class="task-table-action">
-                        <a mat-list-item [routerLink]="'/tasks/' + task.taskId  +'/'">  <mat-icon >visibility</mat-icon> </a>
+                        <a mat-list-item [routerLink]="'/tasks/' + row.taskId  +'/'">  <mat-icon >visibility</mat-icon> </a>
                       </div>
                       <div *ngIf = "userRole === 'Mokytojas'" class="task-table-action">
-                        <a mat-list-item secondary><mat-icon  (click)="onDelete(task.taskId!)">delete</mat-icon></a>
+                        <a mat-list-item secondary><mat-icon  (click)="onDelete(row.taskId!)">delete</mat-icon></a>
                       </div>
                       <div *ngIf = "userRole === 'Mokinys'" class="task-table-action">
                         <a color="primary" mat-flat-button [routerLink]="'/lessons/'">
@@ -75,51 +83,27 @@
                         </a>
                       </div>
                     </div>
+                    <!-- <div class = "task-delete">
+                      <mat-icon class = "task-delete-icon" (click)="onDelete(row.taskId)">close</mat-icon>
+                    </div> -->
                   </td>
-                </tr>
-              </tbody>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+              <!-- Row shown when there is no matching data. -->
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4"> Nėra duomenų </td>
+                <!-- <td class="mat-cell" colspan="4"> Nėra duomenų "{{input.value}}"</td> -->
+              </tr>
             </table>
-          </div>
-        </mat-card-content>
-      </mat-card>
+            <mat-paginator
+                        [length]="dataSource ? dataSource.data.length : 0"
+                        showFirstLastButtons
+                        [pageSizeOptions]="[5, 10, 25]"
+                        aria-label="Pasirinkite puslapį">
+            </mat-paginator>
+        </div>
     </div>
   </div>
-  <!-- <div class="container">
-    <div class="card m-5 p-3">
-        <div class="card-body">
-            <table class="table table-bordered table-striped table-hover">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Phone number</th>
-                    <th>Address</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let task of lesssonTasks; let i = index">
-                  <th scope="row"> {{ i + 1 }} </th>
-                  <td>{{ task.taskTitle }}</td>
-                  <td >
-                    <div class="task-table-actions">
-                    <div class="task-table-action">
-                    <a mat-list-item [routerLink]="'/tasks/' + task.taskId  +'/'">  <mat-icon >visibility</mat-icon> </a>
-
-                   </div>
-                   <div class="task-table-action">
-                    <a mat-list-item [routerLink]="'/'"> <mat-icon  (click)="selectUpdate(task)">edit</mat-icon> </a>
-                   </div>
-                   <div class="task-table-action">
-                    <a mat-list-item secondary><mat-icon  (click)="onDelete(task.taskId!)">delete</mat-icon></a>
-                   </div>
-                    </div>
-                  </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-    </div>
-</div> -->

@@ -22,9 +22,7 @@
 
               <p>{{task.taskContent}}</p>
               <div >
-                <!-- <h4 *ngIf="correctAnswer && nextVisible" class = "correct-message">Teisingai!</h4> -->
                 <div *ngIf="!correctAnswer && nextVisible">
-                  <!-- <h4 class = "incorrect-message">Suklydai</h4> -->
                   <div class = "answer">
                     <h4 class = "incorrect-answer">{{this.lessonCompleteForm.value.answer}}</h4>
                     <h4 *ngFor="let answ of correctAnswers; let i = index" class = "answer-content"> {{answ.AnswerContent}}
@@ -33,7 +31,6 @@
                   </div>
                 </div>
                 <div *ngIf="correctAnswer && nextVisible">
-                  <!-- <h4 class = "incorrect-message">Suklydai</h4> -->
                   <div class = "answer">
                     <h4 class = "answer-content"> {{task.answers![0].AnswerContent}}</h4>
                   </div>

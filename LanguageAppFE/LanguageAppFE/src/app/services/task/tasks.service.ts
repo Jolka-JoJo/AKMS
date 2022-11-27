@@ -37,10 +37,6 @@ export class TasksService {
     return this.http.post<LesssonTask>(this.url + "/addUser", data);
   }
 
-  // updateUserTask(data:){
-
-  // }
-
   private createCompleteRoute = (route: string, envAddress: string) => {
     return `${envAddress}/${route}`;
   }

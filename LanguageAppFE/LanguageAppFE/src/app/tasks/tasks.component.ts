@@ -1,8 +1,10 @@
 import { LesssonTask, taskType, userTasksDTO } from './../models/task/task.module';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, RequiredValidator, Validators } from '@angular/forms';
 import { TasksService } from '../services/task/tasks.service';
 import { UserService } from '../services/user/user.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-tasks',
@@ -10,13 +12,15 @@ import { UserService } from '../services/user/user.service';
   styleUrls: ['./tasks.component.scss']
 })
 export class TasksComponent implements OnInit, OnDestroy  {
-  // dtOptions: DataTables.Settings = {};
-  // dtTrigger: Subject<any> = new Subject<any>();
   lesssonTasks: LesssonTask[] =[];
   updateTaskId: number | undefined;
   taskTypes = taskType;
   userId!: string;
   userRole!: string;
+  dataSource!: MatTableDataSource<LesssonTask>;
+  displayedColumns?: string[] = ['Nr', 'Task', 'TaskContent', 'Delete'];
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   taskAddingForm = this.formBuilder.group({
     taskTitle: new FormControl('', Validators.required),
@@ -48,8 +52,8 @@ export class TasksComponent implements OnInit, OnDestroy  {
           temp.learned = x.learned;
           this.lesssonTasks.push(temp);
         });
-        console.log(elements)
-
+        this.dataSource = new MatTableDataSource<LesssonTask>(this.lesssonTasks);
+        this.dataSource.paginator = this.paginator;
       })
     })
 
@@ -74,23 +78,35 @@ export class TasksComponent implements OnInit, OnDestroy  {
     formData.append('taskType', this.taskAddingForm.value.taskType!);
     formData.append('userId', this.userId)
 
-    this.tasksService.addTask(formData).subscribe(response=> this.lesssonTasks = response);
-
-    this.taskAddingForm = this.formBuilder.group({
-      taskTitle: new FormControl('', Validators.required),
-      taskContent: new FormControl(''),
-      taskType: new FormControl(''),
-      file:  [null],
+    this.tasksService.addTask(formData).subscribe(response=>{
+      this.lesssonTasks = response;
+      this.dataSource = new MatTableDataSource<LesssonTask>(this.lesssonTasks);
+      this.dataSource.paginator = this.paginator;
     });
+
+    this.taskAddingForm.reset();
 
   }
 
   onDelete(id: number){
-    this.tasksService.deleteTask(id, this.userId).subscribe(response=> this.lesssonTasks = response);
+    this.tasksService.deleteTask(id, this.userId).subscribe(response=> {
+      this.lesssonTasks = response;
+      this.dataSource = new MatTableDataSource<LesssonTask>(this.lesssonTasks);
+      this.dataSource.paginator = this.paginator;
+    });
   }
 
   selectUpdate(task: LesssonTask){
     this.updateTaskId = task.taskId;
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
 

@@ -1,0 +1,107 @@
+.dictionary-main{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+  padding: auto;
+
+  .dictionary-first-line{
+    display: flex;
+    justify-content: space-between;
+    .practise-button{
+      margin-bottom: 10px;
+      margin-right: 5px;
+      height: 40px;
+    }
+  }
+
+  .dictionary-card{
+    margin-bottom: 20px;
+  }
+
+  .dictionary-form{
+    .dictionary-form-content{
+      padding: 10px;
+      .dictionary-form-field{
+        width: 100%;
+      }
+      .dictionary-form-button{
+        display: flex;
+        justify-content: flex-end;
+
+      }
+    }
+  }
+
+  .dictionary-table-actions{
+    display: flex;
+    justify-content: flex-end;
+    text-align: right;
+    .dictionary-table-action{
+      margin-left: 10px;
+      cursor: pointer;
+    }
+  }
+
+}
+
+table {
+  width: 100%;
+
+  .dictionary-delete{
+    display: flex;
+    justify-content: flex-end;
+    .dictionary-delete-icon{
+      cursor: pointer;
+    }
+  }
+}
+
+.table-filter-input
+{
+  width: 95%;
+  margin-left: 5px;
+}
+.action-buttons{
+  display: flex;
+}
+.newCategory-field{
+  display: flex;
+  .newCategory-delete-button{
+    height: 35px;
+    margin-top: 5px;
+    margin-left: 10px;
+  }
+}
+.newCategory-add-button{
+  display: flex;
+  justify-content: flex-start;
+  margin-right: 20px;
+}
+
+@media only screen and (max-width: 600px) {
+  .dictionary-card{
+    width: 350px;
+    //max-width: calc(100% - 20px);
+    margin: auto;
+    padding: 0 10px;
+  }
+  .all-words{
+    width: 350px;
+    //max-width: calc(100% - 20px);
+    margin: auto;
+  }
+}
+@media only screen and (min-width: 768px) {
+  .dictionary-card, .all-words{
+    width: 1000px;
+    max-width: calc(100% - 20px);
+    margin: 0 auto;
+    padding: 0 10px;
+  }
+  .all-words{
+    width: 1000px;
+    max-width: calc(100% - 20px);
+
+  }
+}

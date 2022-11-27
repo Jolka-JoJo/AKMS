@@ -1,3 +1,5 @@
+import { PractiseWordsComponent } from './dictionary/practise-words/practise-words.component';
+import { DictionaryComponent } from './dictionary/dictionary/dictionary.component';
 import { TasksCompleteComponent } from './tasks/tasks-complete/tasks-complete.component';
 import { UpdateProfileComponent } from './authentication/update-profile/update-profile.component';
 import { TaskViewComponent } from './tasks/task-view/task-view.component';
@@ -17,6 +19,8 @@ const routes: Routes = [
   {path:'lessons/:id', component:LessonViewComponent, canActivate: [AuthGuard]},
   {path:'lessons/:id/complete', component:TasksCompleteComponent, canActivate: [AuthGuard]},
   {path:'updateProfile', component:UpdateProfileComponent, canActivate: [AuthGuard]},
+  {path:'dictionary', component:DictionaryComponent, canActivate: [AuthGuard]},
+  {path:'dictionary/practise', component:PractiseWordsComponent, canActivate: [AuthGuard]},
 ];
 
 @NgModule({

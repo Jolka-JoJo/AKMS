@@ -53,11 +53,6 @@
       cursor: pointer;
 
     }
-    .lesson-status{
-      padding: 5px;
-      border-radius: 8px;
-      font-weight: 500;
-    }
   }
 
 
@@ -73,6 +68,9 @@ table {
       cursor: pointer;
     }
   }
+}
+.lesson-students-div{
+  margin-top: 15px;
 }
 
 .mat-form-field {

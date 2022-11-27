@@ -59,6 +59,20 @@ namespace LanguageAppBackEnd.Data
                 .WithMany(c => c.UserTask)
                 .HasForeignKey(bc => bc.TaskId);
 
+            //WordCategory
+            modelBuilder.Entity<CategoryWord>()
+            .HasKey(bc => new { bc.CategoryId, bc.WordPhraseId });
+
+            modelBuilder.Entity<CategoryWord>()
+                .HasOne(bc => bc.Category)
+                .WithMany(b => b.CategoryWords)
+                .HasForeignKey(bc => bc.CategoryId);
+
+            modelBuilder.Entity<CategoryWord>()
+                .HasOne(bc => bc.WordPhrase)
+                .WithMany(c => c.CategoryWords)
+                .HasForeignKey(bc => bc.WordPhraseId);
+
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
 
         }
@@ -70,6 +84,9 @@ namespace LanguageAppBackEnd.Data
         public DbSet<LessonTaskLesson> LessonTaskLesson { get; set; }
         public DbSet<UserLesson> UserLesson { get; set; }
         public DbSet<UserTask> UserTask { get; set; }
+        public DbSet<WordPhrase> WordPhrases { get; set; }
+        public DbSet<CategoryWord> CategoryWords { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
     }
 }

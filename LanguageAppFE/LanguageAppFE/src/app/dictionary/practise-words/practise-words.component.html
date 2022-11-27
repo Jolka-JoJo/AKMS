@@ -1,0 +1,78 @@
+<div>
+  <div *ngIf = "words" class="complete-card">
+    <mat-card class="complete-card-content"  [ngClass]="{'correct': correctAnswer && nextVisible, 'incorrect': !correctAnswer && nextVisible}">
+      <mat-card-content class = "complete-form-content">
+        <section class="progress-section">
+          <mat-progress-bar
+              color="primary"
+              mode="determinate"
+              [value]="progress"
+              >
+          </mat-progress-bar>
+        </section>
+        <ng-container *ngFor="let word of words;let i = index">
+          <form [formGroup]="practiseForm" (ngSubmit)="nextVisible? next(i) : submit(i)" >
+
+            <div [hidden]="word.isHidden">
+              <!-- <div class = "task-title">
+                <mat-icon *ngIf="correctAnswer && nextVisible">thumb_up</mat-icon>
+                <mat-icon *ngIf="!correctAnswer && nextVisible">thumb_down</mat-icon>
+              </div> -->
+
+              <p>{{word.translation}}</p>
+              <div >
+                <div *ngIf="!correctAnswer && nextVisible">
+                  <div class = "answer">
+                    <h4 class = "incorrect-answer">{{this.practiseForm.value.answer}}</h4>
+                    <h4 class = "answer-content"> {{word.wordPhraseContent}}</h4>
+                  </div>
+                  <p>{{word.definition}}</p>
+
+                </div>
+                <div *ngIf="correctAnswer && nextVisible">
+                  <div class = "answer">
+                    <h4 class = "answer-content"> {{word.wordPhraseContent}}</h4>
+                  </div>
+                  <p>{{word.definition}}</p>
+
+                </div>
+
+
+                <mat-form-field class="answer-input" *ngIf="!nextVisible && !correctAnswer">
+                  <mat-label>Atsakymas</mat-label>
+                  <input formControlName="answer" autocomplete="off" matInput  type="text">
+
+
+                </mat-form-field>
+              </div>
+              <div class = "next-buttton">
+                <button *ngIf="!nextVisible" mat-raised-button color = "primary" type="submit">Pateikti</button>
+                <button *ngIf="nextVisible" mat-raised-button color = "primary" (onclick)="next(i)">Kitas</button>
+              </div>
+            </div>
+         </form>
+
+        </ng-container>
+        <div *ngIf="dictionaryEnd">
+          <div class = "dictionary-completed">
+            <h2 class = "finish-h"> Baigta</h2>
+            <img class = "finish-img" src="..\..\..\assets\fire-cracker.png" alt = "pamoka baigta">
+          </div>
+          <div class = "back-button">
+            <div class = "button">
+              <a color="primary" mat-flat-button (click)="reset()">
+                Pakartoti
+              </a>
+            </div>
+            <div class = "button">
+              <a color="primary" mat-flat-button [routerLink]="'/dictionary/'">
+                Grįžti į visų žodžių sąrašą
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

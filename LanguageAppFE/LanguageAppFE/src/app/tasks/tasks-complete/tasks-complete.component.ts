@@ -64,7 +64,6 @@ export class TasksCompleteComponent implements OnInit {
             tasksIds: this.incorrectTasksIds
           }
           this.taskService.addUserToTask(temp).subscribe();
-          //this.taskService.updateTask().subscribe();
         })
       }
 
