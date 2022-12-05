@@ -39,6 +39,12 @@ namespace LanguageAppBackEnd.Controllers
                 .Where(entry => entry.UserId == data.userId)
                 .Select(entry => new { entry.Task, entry.learned}).ToList();
 
+            var answers = _context.Answers.ToList();
+            //foreach (var answer in answers)
+            //{
+            //    var temp = tasks.Find(x => x.Task.taskId == answer.lessonTaskId).Task;
+            //    temp.answers.Add(answer);
+            //}
             
             var filteredTasks = tasks.Where(x => !data.tasksToFilter.Contains(x.Task.taskId));
 
@@ -104,6 +110,19 @@ namespace LanguageAppBackEnd.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(dbTask);
+        }
+
+        [HttpPut("learned/{userId}/{taskId}")]
+        public async Task<ActionResult> UpdateLearnedTask(string userId, int taskid)
+        {
+            var dbUserTask = _context.UserTask.Where(x => x.TaskId == taskid && x.UserId == userId).First();
+            if (dbUserTask == null)
+                return BadRequest("Task not found.");
+
+            dbUserTask.learned = true;
+             _context.SaveChanges();
+
+            return Ok();
         }
 
         [HttpDelete("delete/{userId}/{taskId}")]

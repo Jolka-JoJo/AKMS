@@ -37,6 +37,10 @@ export class TasksService {
     return this.http.post<LesssonTask>(this.url + "/addUser", data);
   }
 
+  updateLearnedLessons(taskId: number, userId: string){
+    return this.http.put(this.url + "/learned/" + userId + "/"+ taskId, null);
+  }
+
   private createCompleteRoute = (route: string, envAddress: string) => {
     return `${envAddress}/${route}`;
   }

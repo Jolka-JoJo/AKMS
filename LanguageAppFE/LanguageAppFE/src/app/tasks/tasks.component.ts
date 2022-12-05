@@ -1,6 +1,6 @@
 import { LesssonTask, taskType, userTasksDTO } from './../models/task/task.module';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, RequiredValidator, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroupDirective, RequiredValidator, Validators } from '@angular/forms';
 import { TasksService } from '../services/task/tasks.service';
 import { UserService } from '../services/user/user.service';
 import { MatTableDataSource } from '@angular/material/table';
@@ -48,9 +48,12 @@ export class TasksComponent implements OnInit, OnDestroy  {
       }
       this.tasksService.getAllTasks(data).subscribe((elements)=>{
         elements.forEach(x =>{
-          var temp:LesssonTask = x.Task;
-          temp.learned = x.learned;
-          this.lesssonTasks.push(temp);
+          if((this.userRole == "Mokinys" && !x.learned) || this.userRole == "Mokytojas"){
+            var temp:LesssonTask = x.Task;
+            temp.learned = x.learned;
+            this.lesssonTasks.push(temp);
+          }
+
         });
         this.dataSource = new MatTableDataSource<LesssonTask>(this.lesssonTasks);
         this.dataSource.paginator = this.paginator;
@@ -68,7 +71,7 @@ export class TasksComponent implements OnInit, OnDestroy  {
     }
   }
 
-  onSubmit(){
+  onSubmit(formDirective: FormGroupDirective){
     var formData = new FormData();
     const fileToUpload = this.taskAddingForm.value;
 
@@ -85,6 +88,10 @@ export class TasksComponent implements OnInit, OnDestroy  {
     });
 
     this.taskAddingForm.reset();
+    formDirective.resetForm();
+
+    const fileInput = <HTMLInputElement>document.querySelector('ngx-mat-file-input') as any;
+    fileInput.value = null;
 
   }
 
@@ -96,9 +103,9 @@ export class TasksComponent implements OnInit, OnDestroy  {
     });
   }
 
-  selectUpdate(task: LesssonTask){
-    this.updateTaskId = task.taskId;
-  }
+  // selectUpdate(task: LesssonTask){
+  //   this.updateTaskId = task.taskId;
+  // }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -108,7 +115,5 @@ export class TasksComponent implements OnInit, OnDestroy  {
       this.dataSource.paginator.firstPage();
     }
   }
-
-
 }
 

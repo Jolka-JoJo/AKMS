@@ -57,12 +57,14 @@ export class TaskViewComponent implements OnInit{
 
     await this.getTask();
     await this.getAnswers();
-    if(this.task.taskImage) this.filename = "task_" + this.taskId + "." + this.getFileExtension(this.task.taskImage);
   }
 
   async getTask(){
-    const data = this.tasksService.getTask(this.taskId);
-    this.task = await lastValueFrom(data);
+    this.tasksService.getTask(this.taskId).subscribe(res =>{
+      this.task = res;
+      if(this.task.taskImage) this.filename = "task_" + this.taskId + "." + this.getFileExtension(this.task.taskImage);
+
+    });
   }
 
   async getAnswers(){

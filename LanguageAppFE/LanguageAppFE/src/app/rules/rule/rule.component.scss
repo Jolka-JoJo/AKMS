@@ -1,0 +1,72 @@
+.task-main{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 50px auto;
+  padding: auto;
+
+  .task-card{
+    margin-bottom: 20px;
+  }
+
+  .task-form{
+    .task-form-content{
+      padding: 10px;
+      .task-form-field{
+        width: 100%;
+      }
+      .task-form-button{
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  .task-table-actions{
+    display: flex;
+    justify-content: flex-end;
+    text-align: right;
+    .task-table-action{
+      margin-left: 10px;
+      cursor: pointer;
+    }
+  }
+
+}
+table {
+  width: 100%;
+
+  .task-delete{
+    display: flex;
+    justify-content: flex-end;
+    .task-delete-icon{
+      cursor: pointer;
+    }
+  }
+}
+
+.table-filter-input
+{
+  width: 90%;
+  margin-left: 10px;
+}
+
+.sidenav-tasks{
+  display: flex;
+}
+@media only screen and (max-width: 600px) {
+  .task-card {
+    width: 350px;
+    //max-width: calc(100% - 20px);
+    margin: auto;
+    padding: 0 10px;
+  }
+}
+@media only screen and (min-width: 768px) {
+  .task-card{
+    width: 1200px;
+    max-width: calc(100% - 20px);
+    margin: 0 auto;
+    padding: 0 10px;
+  }
+}

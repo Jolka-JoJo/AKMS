@@ -24,7 +24,6 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule} from '@angular/material/card';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TaskViewComponent } from './tasks/task-view/task-view.component';
-import { TaskUpdateComponent } from './tasks/task-update/task-update.component';
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 import {MatMenuModule} from '@angular/material/menu';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
@@ -37,13 +36,15 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { AddTaskToLessonDialogComponent } from './lessons/add-task-to-lesson-dialog/add-task-to-lesson-dialog.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { StudentsComponent } from './students/students/students.component';
 import { AddStudentToLessonDialogComponent } from './students/add-student-to-lesson-dialog/add-student-to-lesson-dialog.component';
 import { TasksCompleteComponent } from './tasks/tasks-complete/tasks-complete.component';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { DictionaryComponent } from './dictionary/dictionary/dictionary.component';
 import { PractiseWordsComponent } from './dictionary/practise-words/practise-words.component';
 import { CategoryChoiceDialogComponent } from './dictionary/category-choice-dialog/category-choice-dialog.component';
+import { TasksRepeatComponent } from './tasks/tasks-repeat/tasks-repeat.component';
+import { RuleComponent } from './rules/rule/rule.component';
+import { RuleViewComponent } from './rules/rule-view/rule-view.component';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -54,18 +55,19 @@ export function tokenGetter() {
     AppComponent,
     TasksComponent,
     TaskViewComponent,
-    TaskUpdateComponent,
     AuthComponent,
     LessonsComponent,
     LessonViewComponent,
     UpdateProfileComponent,
     AddTaskToLessonDialogComponent,
-    StudentsComponent,
     AddStudentToLessonDialogComponent,
     TasksCompleteComponent,
     DictionaryComponent,
     PractiseWordsComponent,
-    CategoryChoiceDialogComponent
+    CategoryChoiceDialogComponent,
+    TasksRepeatComponent,
+    RuleComponent,
+    RuleViewComponent
   ],
   imports: [
     BrowserModule,

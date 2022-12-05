@@ -21,10 +21,8 @@
               <div>
                 <h3>{{task ? task.taskContent : ""}}</h3>
               </div>
-              <div *ngIf="task && task.taskImage">
-                <img src="/assets/uploads/{{filename}}">
-                <!-- <pdf-viewer [src]="filename!" [render-text]="true" style="display: block;">
-                </pdf-viewer> -->
+              <div  *ngIf="task && task.taskImage">
+                <img class = "image" src="/assets/uploads/{{filename}}">
               </div>
               <div class = "answer-list">
                 <div>
@@ -66,7 +64,7 @@
 
                   <div class="answer-form-buttons">
                     <div class="answer-form-button">
-                      <button type="submit" mat-raised-button color="primary">{{editAnswermode? "Atnaujinti atsakymą":"Išsaugoti atsakymą"}}</button>
+                      <button [disabled]="!answerForm!.valid" type="submit" mat-raised-button color="primary">{{editAnswermode? "Atnaujinti atsakymą":"Išsaugoti atsakymą"}}</button>
                     </div>
                     <div class="answer-form-button answer-form-button">
                       <button mat-raised-button color="warn" (click)="cancelAnswer()">{{"Atšaukti"}}</button>
@@ -124,7 +122,7 @@
                   <button type="submit" mat-raised-button color="primary">Atnaujinti</button>
                 </div>
                 <div class="task-form-button">
-                  <button mat-raised-button color="warn" (click)="cancelTaskUpadate()">{{"Atšaukti"}}</button>
+                  <button [disabled]="!taskUpdatingForm!.valid" mat-raised-button color="warn" (click)="cancelTaskUpadate()">{{"Atšaukti"}}</button>
                 </div>
               </div>
             </form>

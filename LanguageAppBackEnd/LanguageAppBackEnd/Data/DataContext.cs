@@ -72,6 +72,36 @@ namespace LanguageAppBackEnd.Data
                 .HasOne(bc => bc.WordPhrase)
                 .WithMany(c => c.CategoryWords)
                 .HasForeignKey(bc => bc.WordPhraseId);
+            
+            //UserRule
+            modelBuilder.Entity<UserRule>()
+            .HasKey(bc => new { bc.UserId, bc.RuleId });
+
+            modelBuilder.Entity<UserRule>()
+                .HasOne(bc => bc.User)
+                .WithMany(b => b.UserRules)
+                .HasForeignKey(bc => bc.UserId);
+
+            modelBuilder.Entity<UserRule>()
+                .HasOne(bc => bc.Rule)
+                .WithMany(c => c.UserRules)
+                .HasForeignKey(bc => bc.RuleId);
+
+            //LessonRule
+            modelBuilder.Entity<LessonRule>()
+            .HasKey(bc => new { bc.LessonId, bc.RuleId });
+
+            modelBuilder.Entity<LessonRule>()
+                .HasOne(bc => bc.Lesson)
+                .WithMany(b => b.LessonRules)
+                .HasForeignKey(bc => bc.LessonId);
+
+            modelBuilder.Entity<LessonRule>()
+                .HasOne(bc => bc.Rule)
+                .WithMany(c => c.LessonRules)
+                .HasForeignKey(bc => bc.RuleId);
+
+
 
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
 
@@ -87,6 +117,9 @@ namespace LanguageAppBackEnd.Data
         public DbSet<WordPhrase> WordPhrases { get; set; }
         public DbSet<CategoryWord> CategoryWords { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Rule> Rules { get; set; }
+        public DbSet<UserRule> UserRules { get; set; }
+        public DbSet<LessonRule> LessonRules { get; set; }
 
     }
 }

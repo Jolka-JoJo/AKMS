@@ -135,7 +135,6 @@ export class LessonViewComponent implements OnInit {
       },
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
       if(result && result.length > 0){
         var data: AddUserToLessonRequest ={
           lessonId: this.lessonId,

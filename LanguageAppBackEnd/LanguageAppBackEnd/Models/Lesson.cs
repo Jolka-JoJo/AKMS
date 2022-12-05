@@ -13,5 +13,6 @@ namespace LanguageAppBackEnd.Models
         public DateTime createdDate { get; set; } = DateTime.Now;
         public virtual ICollection<LessonTaskLesson> LessonTaskLesson { get; set; }
         public virtual ICollection<UserLesson> UserLesson { get; set; }
+        public virtual ICollection<LessonRule> LessonRules { get; set; }
     }
 }

@@ -104,7 +104,6 @@ export class PractiseWordsComponent implements OnInit {
       },
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
       var filter: number[] = [];
       if(result){
         filter = result.map((x: any) => x.CategoryId);

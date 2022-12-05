@@ -182,15 +182,15 @@ export class DictionaryComponent implements OnInit {
     this.form.reset();
   }
 
-  chooseCategory(){
-    const dialogRef = this.dialog.open(CategoryChoiceDialogComponent, {
-      data: {
-        categories: this.categories
-      },
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
+  // chooseCategory(){
+  //   const dialogRef = this.dialog.open(CategoryChoiceDialogComponent, {
+  //     data: {
+  //       categories: this.categories
+  //     },
+  //   });
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     console.log(result);
 
-    });
-  }
+  //   });
+  // }
 }

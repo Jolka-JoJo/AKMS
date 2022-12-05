@@ -41,7 +41,7 @@
             </div>
             <div class="lesson-form-buttons">
               <div class="lesson-form-button">
-                <button type="submit" mat-raised-button color="primary">Atnaujinti</button>
+                <button [disabled]="!lessonUpdatingForm!.valid" type="submit" mat-raised-button color="primary">Atnaujinti</button>
               </div>
               <div class="lesson-form-button">
                 <button mat-raised-button color="warn" (click)="cancelLessonUpadate()">{{"Atšaukti"}}</button>

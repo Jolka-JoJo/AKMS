@@ -1,3 +1,7 @@
+import { RuleViewComponent } from './rules/rule-view/rule-view.component';
+import { RuleComponent } from './rules/rule/rule.component';
+import { RuleService } from './services/rule/rule.service';
+import { TasksRepeatComponent } from './tasks/tasks-repeat/tasks-repeat.component';
 import { PractiseWordsComponent } from './dictionary/practise-words/practise-words.component';
 import { DictionaryComponent } from './dictionary/dictionary/dictionary.component';
 import { TasksCompleteComponent } from './tasks/tasks-complete/tasks-complete.component';
@@ -18,9 +22,12 @@ const routes: Routes = [
   {path:'lessons', component:LessonsComponent, canActivate: [AuthGuard]},
   {path:'lessons/:id', component:LessonViewComponent, canActivate: [AuthGuard]},
   {path:'lessons/:id/complete', component:TasksCompleteComponent, canActivate: [AuthGuard]},
+  {path:'tasks/:id/repeat', component:TasksRepeatComponent, canActivate: [AuthGuard]},
   {path:'updateProfile', component:UpdateProfileComponent, canActivate: [AuthGuard]},
   {path:'dictionary', component:DictionaryComponent, canActivate: [AuthGuard]},
   {path:'dictionary/practise', component:PractiseWordsComponent, canActivate: [AuthGuard]},
+  {path:'rule', component:RuleComponent, canActivate: [AuthGuard]},
+  {path:'rule/:id', component:RuleViewComponent, canActivate: [AuthGuard]},
 ];
 
 @NgModule({

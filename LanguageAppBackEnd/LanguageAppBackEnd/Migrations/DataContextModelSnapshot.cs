@@ -111,6 +111,21 @@ namespace LanguageAppBackEnd.Migrations
                     b.ToTable("Lessons");
                 });
 
+            modelBuilder.Entity("LanguageAppBackEnd.Models.LessonRule", b =>
+                {
+                    b.Property<int>("LessonId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RuleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LessonId", "RuleId");
+
+                    b.HasIndex("RuleId");
+
+                    b.ToTable("LessonRules");
+                });
+
             modelBuilder.Entity("LanguageAppBackEnd.Models.lessonTask", b =>
                 {
                     b.Property<int>("taskId")
@@ -150,6 +165,29 @@ namespace LanguageAppBackEnd.Migrations
                     b.HasIndex("TaskId");
 
                     b.ToTable("LessonTaskLesson");
+                });
+
+            modelBuilder.Entity("LanguageAppBackEnd.Models.Rule", b =>
+                {
+                    b.Property<int>("RuleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RuleId"), 1L, 1);
+
+                    b.Property<string>("ruleContent")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ruleImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ruleTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RuleId");
+
+                    b.ToTable("Rules");
                 });
 
             modelBuilder.Entity("LanguageAppBackEnd.Models.User", b =>
@@ -255,6 +293,21 @@ namespace LanguageAppBackEnd.Migrations
                     b.ToTable("UserLesson");
                 });
 
+            modelBuilder.Entity("LanguageAppBackEnd.Models.UserRule", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("RuleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "RuleId");
+
+                    b.HasIndex("RuleId");
+
+                    b.ToTable("UserRules");
+                });
+
             modelBuilder.Entity("LanguageAppBackEnd.Models.UserTask", b =>
                 {
                     b.Property<int>("TaskId")
@@ -331,15 +384,15 @@ namespace LanguageAppBackEnd.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "45046b40-669f-4758-8d03-b724ef197159",
-                            ConcurrencyStamp = "2fe7b48f-495e-432c-9aec-f892d878c4e6",
+                            Id = "418215ef-bacf-44b1-8455-cfcdd12ce1dd",
+                            ConcurrencyStamp = "2ad128ec-cce3-4f08-aac1-680ebd05ff47",
                             Name = "Student",
                             NormalizedName = "STUDENT"
                         },
                         new
                         {
-                            Id = "b7f47752-c6f4-457b-9df3-5da68bc28bb3",
-                            ConcurrencyStamp = "639e7612-90da-45a2-a072-1d02079f106a",
+                            Id = "0bd64c89-0161-4f96-b4ab-50cfeeeb0723",
+                            ConcurrencyStamp = "d5cd8d1b-2883-4eca-b4e1-2bdc0a82430b",
                             Name = "teacher",
                             NormalizedName = "TEACHER"
                         });
@@ -492,6 +545,25 @@ namespace LanguageAppBackEnd.Migrations
                     b.Navigation("WordPhrase");
                 });
 
+            modelBuilder.Entity("LanguageAppBackEnd.Models.LessonRule", b =>
+                {
+                    b.HasOne("LanguageAppBackEnd.Models.Lesson", "Lesson")
+                        .WithMany("LessonRules")
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LanguageAppBackEnd.Models.Rule", "Rule")
+                        .WithMany("LessonRules")
+                        .HasForeignKey("RuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
+
+                    b.Navigation("Rule");
+                });
+
             modelBuilder.Entity("LanguageAppBackEnd.Models.LessonTaskLesson", b =>
                 {
                     b.HasOne("LanguageAppBackEnd.Models.Lesson", "Lesson")
@@ -526,6 +598,25 @@ namespace LanguageAppBackEnd.Migrations
                         .IsRequired();
 
                     b.Navigation("Lesson");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LanguageAppBackEnd.Models.UserRule", b =>
+                {
+                    b.HasOne("LanguageAppBackEnd.Models.Rule", "Rule")
+                        .WithMany("UserRules")
+                        .HasForeignKey("RuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LanguageAppBackEnd.Models.User", "User")
+                        .WithMany("UserRules")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rule");
 
                     b.Navigation("User");
                 });
@@ -616,6 +707,8 @@ namespace LanguageAppBackEnd.Migrations
 
             modelBuilder.Entity("LanguageAppBackEnd.Models.Lesson", b =>
                 {
+                    b.Navigation("LessonRules");
+
                     b.Navigation("LessonTaskLesson");
 
                     b.Navigation("UserLesson");
@@ -630,9 +723,18 @@ namespace LanguageAppBackEnd.Migrations
                     b.Navigation("answers");
                 });
 
+            modelBuilder.Entity("LanguageAppBackEnd.Models.Rule", b =>
+                {
+                    b.Navigation("LessonRules");
+
+                    b.Navigation("UserRules");
+                });
+
             modelBuilder.Entity("LanguageAppBackEnd.Models.User", b =>
                 {
                     b.Navigation("UserLesson");
+
+                    b.Navigation("UserRules");
 
                     b.Navigation("UserTask");
 

@@ -47,9 +47,7 @@ export class AddTaskToLessonDialogComponent implements OnInit {
       this.taskService.getAllTasks(taskData).subscribe(res => {
         res.forEach(x =>{
           this.tasks.push(x.Task);
-          console.log(x)
         })
-        console.log(this.tasks)
         this.dataSource = new MatTableDataSource(this.tasks);
       });
     });

@@ -7,7 +7,7 @@
       <div *ngIf = "userRole === 'Mokytojas'" class = "task-form">
         <mat-card class="task-card">
           <mat-card-content class = "task-form-content">
-            <form [formGroup]="taskAddingForm" (ngSubmit)="onSubmit()" >
+            <form [formGroup]="taskAddingForm" (ngSubmit)="onSubmit(formDirective)" #formDirective="ngForm">
               <div >
                 <mat-form-field class="task-form-field full-width">
                   <mat-label>Užduoties pavadinimas</mat-label>
@@ -38,72 +38,72 @@
                 </mat-form-field>
               </div>
               <div class="task-form-button">
-                <button type="submit" mat-raised-button color="primary">Pridėti</button>
+                <button [disabled]="!taskAddingForm!.valid" type="submit" mat-raised-button color="primary">Pridėti</button>
               </div>
             </form>
           </mat-card-content>
         </mat-card>
       </div>
-        <h3>Visų užduočių sąrašas</h3>
-        <div class="mat-elevation-z8" class="task-card">
+      <h3>Visų užduočių sąrašas</h3>
+      <div class="mat-elevation-z8" class="task-card">
 
-            <mat-form-field class = "table-filter-input" appearance="standard">
-              <mat-label>Ieškoti</mat-label>
-              <input matInput (keyup)="applyFilter($event)" #input>
-            </mat-form-field>
-            <table mat-table [dataSource]="dataSource">
-              <ng-container matColumnDef="Nr" class = "table-row-position">
-                <th mat-header-cell *matHeaderCellDef> Nr </th>
-                <td mat-cell *matCellDef="let row"> {{dataSource.filteredData.indexOf(row) + 1}}</td>
-              </ng-container>
+          <mat-form-field class = "table-filter-input" appearance="standard">
+            <mat-label>Ieškoti</mat-label>
+            <input matInput (keyup)="applyFilter($event)" #input>
+          </mat-form-field>
+          <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="Nr" class = "table-row-position">
+              <th mat-header-cell *matHeaderCellDef> Nr </th>
+              <td mat-cell *matCellDef="let row"> {{dataSource.filteredData.indexOf(row) + 1}}</td>
+            </ng-container>
 
-              <ng-container matColumnDef="Task">
-                <th mat-header-cell *matHeaderCellDef> Užduoties pavadinimas </th>
-                <td mat-cell *matCellDef="let row"> {{row.taskTitle}} </td>
-              </ng-container>
+            <ng-container matColumnDef="Task">
+              <th mat-header-cell *matHeaderCellDef> Užduoties pavadinimas </th>
+              <td mat-cell *matCellDef="let row"> {{row.taskTitle}} </td>
+            </ng-container>
 
-              <ng-container matColumnDef="TaskContent">
-                <th mat-header-cell *matHeaderCellDef> Užduotis </th>
-                <td mat-cell *matCellDef="let row"> {{row.taskContent}} </td>
-              </ng-container>
+            <ng-container matColumnDef="TaskContent">
+              <th mat-header-cell *matHeaderCellDef> Užduotis </th>
+              <td mat-cell *matCellDef="let row"> {{row.taskContent}} </td>
+            </ng-container>
 
-              <ng-container matColumnDef="Delete" >
-                <th mat-header-cell *matHeaderCellDef></th>
-                  <td mat-cell *matCellDef="let row" >
-                    <div class="task-table-actions">
-                      <div *ngIf = "userRole === 'Mokytojas'" class="task-table-action">
-                        <a mat-list-item [routerLink]="'/tasks/' + row.taskId  +'/'">  <mat-icon >visibility</mat-icon> </a>
-                      </div>
-                      <div *ngIf = "userRole === 'Mokytojas'" class="task-table-action">
-                        <a mat-list-item secondary><mat-icon  (click)="onDelete(row.taskId!)">delete</mat-icon></a>
-                      </div>
-                      <div *ngIf = "userRole === 'Mokinys'" class="task-table-action">
-                        <a color="primary" mat-flat-button [routerLink]="'/lessons/'">
-                          Pakartoti užduotį
-                        </a>
-                      </div>
+            <ng-container matColumnDef="Delete" >
+              <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let row" >
+                  <div class="task-table-actions">
+                    <div *ngIf = "userRole === 'Mokytojas'" class="task-table-action">
+                      <a mat-list-item [routerLink]="'/tasks/' + row.taskId  +'/'">  <mat-icon >visibility</mat-icon> </a>
                     </div>
-                    <!-- <div class = "task-delete">
-                      <mat-icon class = "task-delete-icon" (click)="onDelete(row.taskId)">close</mat-icon>
-                    </div> -->
-                  </td>
-              </ng-container>
+                    <div *ngIf = "userRole === 'Mokytojas'" class="task-table-action">
+                      <a mat-list-item secondary><mat-icon  (click)="onDelete(row.taskId!)">delete</mat-icon></a>
+                    </div>
+                    <div *ngIf = "userRole === 'Mokinys'" class="task-table-action">
+                      <a color="primary" mat-flat-button [routerLink]="'/tasks/'+ row.taskId + '/repeat/'">
+                        Pakartoti užduotį
+                      </a>
+                    </div>
+                  </div>
+                  <!-- <div class = "task-delete">
+                    <mat-icon class = "task-delete-icon" (click)="onDelete(row.taskId)">close</mat-icon>
+                  </div> -->
+                </td>
+            </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-              <!-- Row shown when there is no matching data. -->
-              <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" colspan="4"> Nėra duomenų </td>
-                <!-- <td class="mat-cell" colspan="4"> Nėra duomenų "{{input.value}}"</td> -->
-              </tr>
-            </table>
-            <mat-paginator
-                        [length]="dataSource ? dataSource.data.length : 0"
-                        showFirstLastButtons
-                        [pageSizeOptions]="[5, 10, 25]"
-                        aria-label="Pasirinkite puslapį">
-            </mat-paginator>
-        </div>
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4"> Nėra duomenų </td>
+              <!-- <td class="mat-cell" colspan="4"> Nėra duomenų "{{input.value}}"</td> -->
+            </tr>
+          </table>
+          <mat-paginator
+                      [length]="dataSource ? dataSource.data.length : 0"
+                      showFirstLastButtons
+                      [pageSizeOptions]="[5, 10, 25]"
+                      aria-label="Pasirinkite puslapį">
+          </mat-paginator>
+      </div>
     </div>
   </div>

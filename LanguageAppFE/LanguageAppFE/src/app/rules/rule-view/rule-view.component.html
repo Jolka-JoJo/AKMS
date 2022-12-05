@@ -1,0 +1,76 @@
+<div class = "task-view-content">
+  <div class = "task-form">
+    <mat-card class="task-card-content">
+      <mat-card-content class = "task-form-content">
+        <div class = "task-title-row">
+          <h2>{{ rule ? rule.ruleTitle : ""}}</h2>
+          <div class="task-table-actions">
+            <div class="task-table-action">
+            <a mat-list-item> <mat-icon (click)="updateOpen()" class = "task-card-edit">edit</mat-icon> </a>
+            </div>
+            <div class="task-table-action">
+            <a mat-list-item><mat-icon  (click)="onDelete()">delete</mat-icon></a>
+            </div>
+          </div>
+        </div>
+        <div class="pre-task-content">
+
+          <div class="task-content">
+            <div>
+              <h3>{{rule ? rule.ruleContent : ""}}</h3>
+            </div>
+            <div *ngIf="rule && rule.ruleImage">
+              <img class = "image" src="/assets/uploads/{{filename}}">
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class = "task-form" *ngIf="update">
+    <mat-card class="task-card">
+        <mat-card-content class = "task-form-content">
+          <form [formGroup]="form" (ngSubmit)="onUpdate()" >
+            <div >
+              <mat-form-field class="task-form-field full-width">
+                <mat-label>Taisyklės pavadinimas</mat-label>
+                <input matInput formControlName="ruleTitle" type="text" placeholder="Taisyklės pavadinimas"  name="RuleTitle" required>
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field class="task-form-field full-width">
+                <mat-label>Taisyklė</mat-label>
+                <input  matInput formControlName="ruleContent" type="text" placeholder="Taisyklė" name="RuleContent">
+              </mat-form-field>
+            </div>
+
+            <!-- <div>
+              <mat-form-field class="task-form-field full-width">
+                <mat-label>Užduoties failas</mat-label>
+                <ngx-mat-file-input matInput placeholder="Užduoties failas"  name="file" (change)="onFileChange($event)"></ngx-mat-file-input>
+
+              </mat-form-field>
+            </div> -->
+            <div>
+              <mat-form-field *ngIf="!tempFilename" class="task-form-field full-width">
+                <mat-label>Taisyklės failas</mat-label>
+                <ngx-mat-file-input matInput formControlName="filename" placeholder="Taisyklės failas"  name="file" (change)="onFileChange($event)"></ngx-mat-file-input>
+              </mat-form-field>
+              <div class="image-update" *ngIf="tempFilename">
+                <h3>{{ tempFilename}}</h3>
+                <mat-icon (click)="removeImage()">close</mat-icon>
+              </div>
+            </div>
+            <div class="task-form-buttons">
+              <div class="task-form-button">
+                <button type="submit" mat-raised-button color="primary">Atnaujinti</button>
+              </div>
+              <div class="task-form-button">
+                <button [disabled]="!form!.valid" mat-raised-button color="warn" (click)="cancelTaskUpadate()">{{"Atšaukti"}}</button>
+              </div>
+            </div>
+          </form>
+        </mat-card-content>
+    </mat-card>
+  </div>
+

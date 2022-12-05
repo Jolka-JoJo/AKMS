@@ -1,9 +1,9 @@
 <div class="main-navbar-sidenav">
   <mat-toolbar color="primary">
     <mat-toolbar-row>
-      <button  *ngIf='isUserAuthenticated' mat-icon-button>
+      <!-- <button  *ngIf='isUserAuthenticated' mat-icon-button>
         <mat-icon (click)="sidenav.toggle()">menu</mat-icon>
-      </button>
+      </button> -->
       <h1>AKMS</h1>
       <div *ngIf='isUserAuthenticated' clas = "main-buttons">
         <a mat-button [routerLink]="['/lessons']"routerLinkActive="active"
@@ -12,7 +12,8 @@
         [routerLinkActiveOptions]="{exact: true}"> Užduotys </a>
         <a  *ngIf ="role === 'Mokinys'" mat-button [routerLink]="['/dictionary']"routerLinkActive="active"
         [routerLinkActiveOptions]="{exact: true}"> Žodynėlis </a>
-        <a mat-button [routerLink]="'/'"> Taisyklės </a>
+        <a mat-button [routerLink]="['/rule']"routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact: true}"> Taisyklės </a>
       </div>
       <span class="menu-spacer"></span>
         <div class="auth-buttons">
@@ -34,8 +35,9 @@
     </mat-toolbar-row>
 
   </mat-toolbar>
+  <router-outlet></router-outlet>
 
-  <div class = "sidenav-tasks">
+  <!-- <div class = "sidenav-tasks">
     <mat-sidenav-container>
       <mat-sidenav #sidenav>
         <mat-nav-list>
@@ -57,4 +59,4 @@
       </mat-sidenav-content>
     </mat-sidenav-container>
 
-</div>
+</div> -->

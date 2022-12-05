@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Abp.Collections.Extensions;
+using AutoMapper;
 using LanguageAppBackEnd.Entities;
 using LanguageAppBackEnd.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,7 +23,6 @@ namespace LanguageAppBackEnd.Controllers
         [HttpPost("all/{userId}")]
         public async Task<ActionResult<List<WordPhrase>>> GetAllWordsPhrases(string userId, [FromBody] int[] filter)
         {
-            Console.WriteLine(filter);
             var dbWords = _context.WordPhrases.Where(x => x.userId == userId).ToList();
 
             var data = (from word in _context.WordPhrases
@@ -44,13 +44,17 @@ namespace LanguageAppBackEnd.Controllers
                                  CategoryName = categoryWord3.CategoryName ?? string.Empty
                              }
                               ).ToList();
+
+            if (filter.Length > 0)
+            {
+                data = data.Where(value => filter.Any(categoryId => categoryId.ToString() == value.CategoryId)).ToList();
+            }
+
             List<DictionaryDTO> dictionary = new List<DictionaryDTO>();
 
             foreach (var values in data)
             {
 
-                
-                // fin ids position place new category
                 var valueExist = dictionary.Find(x => x.wordPhraseId == values.wordPhraseId);
                 if (valueExist == null)
                 {
@@ -83,10 +87,8 @@ namespace LanguageAppBackEnd.Controllers
 
                     }
                 }
-
             }
 
-            Console.WriteLine(dictionary);
             return Ok(dictionary);
         }
 

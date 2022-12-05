@@ -53,13 +53,16 @@
          </form>
 
         </ng-container>
-        <div *ngIf="dictionaryEnd">
-          <div class = "dictionary-completed">
+        <div>
+          <div *ngIf="dictionaryEnd" class = "dictionary-completed">
             <h2 class = "finish-h"> Baigta</h2>
             <img class = "finish-img" src="..\..\..\assets\fire-cracker.png" alt = "pamoka baigta">
           </div>
-          <div class = "back-button">
-            <div class = "button">
+          <div *ngIf="words.length === 0" class = "dictionary-completed">
+            <h2 class = "finish-h"> Nėra žodžių</h2>
+          </div>
+          <div *ngIf="dictionaryEnd || words.length === 0" class = "back-button">
+            <div *ngIf="dictionaryEnd" class = "button">
               <a color="primary" mat-flat-button (click)="reset()">
                 Pakartoti
               </a>

@@ -12,7 +12,6 @@ export class DictionaryService {
   constructor(private http: HttpClient) { }
 
   getAllWordsPhrases(userId: string, filter: number[]): Observable<any[]> {
-    console.log(filter);
     return this.http.post<any[]>(this.url + "/all/" + userId, filter);
   }
 
@@ -29,7 +28,6 @@ export class DictionaryService {
   }
 
   updateWordPhrase(data: dictionary, id: number): Observable<dictionary[]>{
-    console.log(data)
     return this.http.put<dictionary[]>(this.url + "/" + id, data);
   }
 }

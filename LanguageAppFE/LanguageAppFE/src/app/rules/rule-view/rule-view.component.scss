@@ -1,0 +1,138 @@
+.task-view-content{
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+
+  .task-form{
+    .task-form-content{
+      padding: 10px;
+      .task-form-field{
+        width: 100%;
+      }
+      .task-form-buttons{
+        display: flex;
+        justify-content: flex-end;
+      }
+      .task-form-button{
+        margin-left: 5px;
+      }
+      .image-update{
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
+
+  .task-card-content{
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    .task-title-row{
+
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      .task-table-actions{
+        display: flex;
+
+      }
+      .task-card-edit{
+        cursor: pointer;
+      }
+    }
+    .task-table-action, .answer-action{
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    .add-answers-button, .answer-form-button{
+        display: flex;
+        justify-content: flex-end;
+        margin-left: 5px;
+    }
+    .pre-task-content{
+      display: flex;
+      justify-content: center;
+
+      .task-content{
+        margin: auto 100px;
+        min-width: 800px;
+
+        .answer-list{
+          margin: 20px;
+          margin-right: auto;
+          .answer-list-row{
+            display: flex;
+            justify-content: space-between;
+            .answer-text-isCorrect{
+                display: flex;
+                align-items: center;
+              .correct{
+                color: green;
+              }
+              .incorrect{
+                color: red;
+              }
+              .answer-list-text{
+                text-align: center;
+              }
+            }
+            .answer-actions{
+              display: flex;
+            }
+          }
+        }
+        .hidden-id{
+          display: block;
+          visibility: hidden;
+          height: 0;
+          width: 0;
+        }
+        .answer-form-row{
+          display: flex;
+
+          .answer-form-field{
+            width: 100%;
+          }
+          .answer-isCorrect-option{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+            padding: 10px;
+            .answer-isCorrect-option-label{
+              margin-right: 5px;
+            }
+          }
+        }
+        .answer-form-buttons{
+          display: flex;
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
+  .image{
+    width: 700px;
+  }
+
+}
+
+@media only screen and (max-width: 600px) {
+  .task-view-content {
+    width: 350px;
+    //max-width: calc(100% - 20px);
+    margin: auto;
+    padding: 0 10px;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .task-view-content{
+    width: 1000px;
+    max-width: calc(100% - 20px);
+    //margin: 0 auto;
+    //padding: 0 10px;
+  }
+}
+
