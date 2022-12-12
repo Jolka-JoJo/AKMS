@@ -22,5 +22,22 @@ namespace LanguageAppBackEnd.Facades
             }
 
         }
+
+        public static async Task DeleteFileAsync(string bussinesArea, int id, string fileNameDB)
+        {
+
+            string path = "C:\\Users\\Jolanta\\Desktop\\KU\\kalbų mokymosi sistema\\LanguageAppFE\\LanguageAppFE\\src\\assets\\uploads\\";
+
+            string fileName = bussinesArea + "_" + id;
+
+            string extension = fileNameDB.Split('.').Last();
+            path += fileName + "." + extension;
+
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+
+        }
     }
 }

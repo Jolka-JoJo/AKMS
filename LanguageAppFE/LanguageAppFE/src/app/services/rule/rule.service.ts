@@ -30,4 +30,13 @@ export class RuleService {
   updateRule(id: number, rule: FormData): Observable<Rule>{
     return this.http.put<Rule>(this.url + "/" + id, rule);
   }
+
+  saveRule(rule: Rule){
+    return this.http.post<Rule>(this.url + "/saveRule", rule);
+  }
+
+  removeRuleFromSaved(rule: Rule){
+    return this.http.post<Rule>(this.url + "/removeRule", rule);
+  }
+
 }

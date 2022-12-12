@@ -98,7 +98,7 @@ export class TasksRepeatComponent implements OnInit {
     if(this.correctAnswer === true)
     {
       const taskId = this.tasks![index].taskId;
-      this.tasksService.updateLearnedLessons(taskId!, this.userId).subscribe();
+      this.tasksService.removeUserFromTask(taskId!, this.userId).subscribe();
     }
 
     this.nextVisible = true;

@@ -5,6 +5,7 @@ export interface LesssonTask{
   taskContent?: string,
   taskType?: number,
   taskImage?: string
+  mistakesCount: number;
   position?: number;
   isHidden?: boolean;
   answers?: Answer[];

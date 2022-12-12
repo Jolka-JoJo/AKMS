@@ -19,7 +19,7 @@
 
             <div class="task-content">
               <div>
-                <h3>{{task ? task.taskContent : ""}}</h3>
+                <h3>{{task &&  task.taskContent ? task.taskContent : ""}}</h3>
               </div>
               <div  *ngIf="task && task.taskImage">
                 <img class = "image" src="/assets/uploads/{{filename}}">

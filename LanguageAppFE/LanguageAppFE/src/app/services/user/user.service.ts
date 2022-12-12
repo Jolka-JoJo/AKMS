@@ -21,8 +21,8 @@ export class UserService {
     return this.http.get<user[]>(this.baseUrl);
   }
 
-  getAllStudents(): Observable<user[]> {
-    return this.http.get<user[]>(this.baseUrl + "/students");
+  getAllStudents(filterIds?: string[]): Observable<user[]> {
+    return this.http.post<user[]>(this.baseUrl + "/students", filterIds);
   }
 
   getUser(): Observable<user> {

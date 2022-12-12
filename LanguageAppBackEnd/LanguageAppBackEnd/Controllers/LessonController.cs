@@ -35,8 +35,8 @@ namespace LanguageAppBackEnd.Controllers
             return Ok(res);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Lesson>> GetLesson(int id)
+        [HttpGet("{id}/{userId}")]
+        public async Task<ActionResult<LessonDTO>> GetLesson(string userId, int id)
         {
             var DBlesson = await _context.Lessons.FindAsync(id);
             LessonDTO lesson = new LessonDTO();
@@ -46,10 +46,10 @@ namespace LanguageAppBackEnd.Controllers
             lesson.lessonTitle = DBlesson.lessonTitle;
 
 
-            var data =  await (from task in _context.Task
+            var data =  (from task in _context.Task
                                   join lessonTasks in _context.LessonTaskLesson
                                   on task.taskId equals lessonTasks.TaskId
-                                  join answers in _context.Answers
+                                  join answers in _context.Answers 
                                   on task.taskId equals answers.lessonTaskId
                                   where lessonTasks.LessonId == id
                                   select new
@@ -57,9 +57,37 @@ namespace LanguageAppBackEnd.Controllers
                                       task,
                                       answers
                                   })
-                                 .ToListAsync();
+                                 .ToList();
             //Thread.Sleep(1000);
             lesson.tasks = new List<lessonTask>();
+
+            var DBRules = (from rule in _context.Rules
+                                     join lessonRule in _context.LessonRules
+                                     on rule.RuleId equals lessonRule.RuleId
+                                     join less in _context.Lessons
+                                     on lessonRule.LessonId equals less.lessonId
+                                     where lessonRule.LessonId == id
+                                 select new RuleDTO
+                                 {
+                                     RuleId = rule.RuleId,
+                                     ruleTitle = rule.ruleTitle,
+                                     ruleContent = rule.ruleContent,
+                                     ruleImage = rule.ruleImage,
+                                 })
+                                 .ToList();
+
+            //lesson.rules = DBRules;
+            lesson.rules = DBRules;
+
+            if (lesson.rules.Count() > 0 && userId != "0")
+            {
+                foreach (var rule in lesson.rules)
+                {
+                    //userId atsitemt
+                   var temp =  _context.UserRules.Where(x => x.UserId == userId && x.RuleId == rule.RuleId);
+                    if (temp != null) rule.isSaved = true;
+                }
+            }
 
             foreach (var values in data)
             {
@@ -214,11 +242,65 @@ namespace LanguageAppBackEnd.Controllers
                                on user.Id equals userLesson.UserId
                                where role.Name == "Student" 
                                where userLesson.LessonId == lessonId
-                               select user)
+                               select new
+                               {
+                                    user.Id,
+                                    role = role.Name,
+                                    user.FirstName,
+                                    user.LastName,
+                                    user.Email,
+                                    userLesson.status
+                               })
                                  .ToListAsync();
 
             
             return Ok(users);
         }
+
+        [HttpPost("addRule")]
+        [Authorize(Roles = "teacher")]
+
+        public async Task<ActionResult> AddRuleToLesson([FromBody] AddToLessonDTO request)
+        {
+            request.rulesIds.ForEach(ruleId =>
+            {
+                var lessonRule = new LessonRule();
+                lessonRule.RuleId = ruleId;
+                lessonRule.LessonId = request.lessonId;
+                _context.LessonRules.Add(lessonRule);
+            });
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPost("removeRule")]
+        [Authorize(Roles = "teacher")]
+
+        public async Task<ActionResult> RemoveRuleFromLesson([FromBody] RemoveFromLessonDTO request)
+        {
+            var lessonRule = new LessonRule();
+            if (request.lessonId == null || request.ruleId == null) return BadRequest();
+            lessonRule.RuleId = (int)request.ruleId;
+            lessonRule.LessonId = request.lessonId;
+            _context.LessonRules.Remove(lessonRule);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPost("finished")]
+        public async Task<ActionResult> lessonFinished([FromBody] AddToLessonDTO request)
+        {
+            var dbLesson = _context.UserLesson.Where(x => x.UserId == request.userId && x.LessonId == request.lessonId).First();
+
+            dbLesson.completedDate = DateTime.Now;
+            dbLesson.status = 2;
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+
     }
 }

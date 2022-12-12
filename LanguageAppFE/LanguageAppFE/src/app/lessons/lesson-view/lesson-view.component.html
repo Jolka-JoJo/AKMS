@@ -4,7 +4,10 @@
     <mat-card class="lesson-card-content">
       <mat-card-content class = "lesson-form-content">
         <div class = "lesson-title-row">
-          <h2>{{ lesson ? lesson.lessonTitle : ""}}</h2>
+          <div>
+            <h2>{{ lesson ? lesson.lessonTitle : ""}}</h2>
+            <h4 *ngIf="this.lessonStudents!.length > 0">Iš viso pamoką atliko {{completedCount()}} iš {{this.lessonStudents!.length}}</h4>
+          </div>
 
           <div *ngIf = "userRole === 'Mokytojas'" class="lesson-table-actions">
             <div class="lesson-table-action">
@@ -27,6 +30,9 @@
     </div>
     <div class = "dialog-button">
       <button mat-raised-button color="primary" (click)="openStudentDialog()">Priskirti mokinius</button>
+    </div>
+    <div class = "dialog-button">
+      <button mat-raised-button color="primary" (click)="openRulesDialog()">Priskirti taisykles</button>
     </div>
   </div>
   <div class = "lesson-form" *ngIf="update">
@@ -56,12 +62,12 @@
     <div class="mat-elevation-z8">
       <mat-form-field appearance="standard">
         <mat-label>Ieškoti</mat-label>
-        <input matInput (keyup)="applyFilter($event)" #input>
+        <input matInput (keyup)="applyFilter(dataSourceTasks, $event)" #input>
       </mat-form-field>
-      <table mat-table [dataSource]="dataSource">
+      <table mat-table [dataSource]="dataSourceTasks!">
         <ng-container matColumnDef="Nr" class = "table-row-position">
           <th mat-header-cell *matHeaderCellDef> Nr </th>
-          <td mat-cell *matCellDef="let row"> {{dataSource.filteredData.indexOf(row) + 1}}</td>
+          <td mat-cell *matCellDef="let row"> {{dataSourceTasks!.filteredData.indexOf(row) + 1}}</td>
         </ng-container>
 
         <ng-container matColumnDef="Task">
@@ -72,6 +78,11 @@
         <ng-container matColumnDef="TaskContent">
           <th mat-header-cell *matHeaderCellDef> Užduotis </th>
           <td mat-cell *matCellDef="let row"> {{row.taskContent}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Mistakes">
+          <th mat-header-cell *matHeaderCellDef> Per visą laiką suklysta .. kartų </th>
+          <td mat-cell *matCellDef="let row"> {{row.mistakesCount}} </td>
         </ng-container>
 
         <ng-container matColumnDef="Delete" >
@@ -93,7 +104,7 @@
         </tr>
       </table>
       <mat-paginator
-                  [length]="dataSource ? dataSource.data.length : 0"
+                  [length]="dataSourceTasks ? dataSourceTasks.data.length : 0"
                   showFirstLastButtons
                   [pageSizeOptions]="[5, 10, 25]"
                   aria-label="Pasirinkite puslapį">
@@ -101,13 +112,14 @@
 
     </div>
   </div>
+
   <div class="lesson-students-div" *ngIf = "userRole === 'Mokytojas'">
     <h3>Pamokos mokiniai</h3>
 
     <div class="mat-elevation-z8">
       <mat-form-field class = "search-input" appearance="standard">
       <mat-label>Ieškoti</mat-label>
-      <input matInput (keyup)="applyFilter($event)" #input>
+      <input matInput (keyup)="applyFilter(dataSourceStudent, $event)" #input>
       </mat-form-field>
 
       <table mat-table [dataSource]="dataSourceStudent!">
@@ -119,6 +131,11 @@
         <ng-container matColumnDef="Student">
           <th mat-header-cell *matHeaderCellDef> Mokinys </th>
           <td mat-cell *matCellDef="let row"> {{row.FirstName}} {{row.LastName}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="Status">
+          <th mat-header-cell *matHeaderCellDef> Atlikimo būsena </th>
+          <td mat-cell *matCellDef="let row"> {{row.status == 2 ? "Atliko" : "Neatliko"}} </td>
         </ng-container>
 
         <ng-container  matColumnDef="Delete" >
@@ -142,6 +159,58 @@
 
       <mat-paginator
                   #paginator [length]="dataSourceStudent ? dataSourceStudent.data.length : 0"
+                  showFirstLastButtons
+                  [pageSizeOptions]="[5, 10, 25]"
+                  aria-label="Pasirinkite puslapį">
+      </mat-paginator>
+    </div>
+  </div>
+  <div class="lesson-students-div" *ngIf = "userRole === 'Mokytojas'">
+    <h3>Pamokos taisyklės</h3>
+
+    <div class="mat-elevation-z8">
+      <mat-form-field class = "search-input" appearance="standard">
+      <mat-label>Ieškoti</mat-label>
+      <input matInput (keyup)="applyFilter(dataSourceRule, $event)" #input>
+      </mat-form-field>
+
+      <table mat-table [dataSource]="dataSourceRule!">
+        <ng-container matColumnDef="Nr" class = "table-row-position">
+          <th mat-header-cell *matHeaderCellDef> Nr </th>
+          <td mat-cell *matCellDef="let row"> {{dataSourceRule!.filteredData.indexOf(row) + 1}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="Rule">
+          <th mat-header-cell *matHeaderCellDef> Taisyklės pavadinimas </th>
+          <td mat-cell *matCellDef="let row"> {{row.ruleTitle}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="RuleContent">
+          <th mat-header-cell *matHeaderCellDef> Taisyklė </th>
+          <td mat-cell *matCellDef="let row"> {{row.ruleContent}} </td>
+        </ng-container>
+
+        <ng-container  matColumnDef="Delete" >
+          <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row" >
+              <div class = "task-delete">
+                <mat-icon class = "task-delete-icon" (click)="removeRule(row.RuleId)">close</mat-icon>
+              </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsRules"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsRules;"></tr>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4"> Nėra duomenų </td>
+          <!-- <td class="mat-cell" colspan="4"> Nėra duomenų "{{input.value}}"</td> -->
+        </tr>
+      </table>
+
+      <mat-paginator
+                  #paginator [length]="dataSourceRule ? dataSourceRule.data.length : 0"
                   showFirstLastButtons
                   [pageSizeOptions]="[5, 10, 25]"
                   aria-label="Pasirinkite puslapį">

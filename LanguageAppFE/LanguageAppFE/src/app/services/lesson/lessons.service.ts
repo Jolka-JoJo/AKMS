@@ -2,7 +2,7 @@ import { UserService } from 'src/app/services/user/user.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AddTaskToLessonRequest, AddUserToLessonRequest, LessonResponse, RemoveTaskFromLessonRequest, RemoveUserFromLessonRequest } from 'src/app/interfaces/lesson';
+import { AddRuleToLessonRequest, AddTaskToLessonRequest, AddUserToLessonRequest, LessonResponse, RemoveRuleFromLessonRequest, RemoveTaskFromLessonRequest, RemoveUserFromLessonRequest } from 'src/app/interfaces/lesson';
 import { EnvironmentUrlService } from '../environment-url.service';
 import { user } from 'src/app/models/task/user.module';
 
@@ -18,8 +18,9 @@ export class LessonsService {
     return this.http.get<LessonResponse[]>(this.url + "/all/" + userId);
   }
 
-  getLesson(id: number): Observable<LessonResponse> {
-    return this.http.get<LessonResponse>(this.url + "/" + id);
+  getLesson(id: number, userId: string = "0"): Observable<LessonResponse> {
+    console.log("ID", userId);
+    return this.http.get<LessonResponse>(this.url + "/" + id + "/" + userId);
   }
 
   addLesson(task: FormData): Observable<LessonResponse[]>{
@@ -54,9 +55,15 @@ export class LessonsService {
     return this.http.post<LessonResponse[]>(this.url + "/removeUser" , data);
   }
 
-  private createCompleteRoute = (route: string, envAddress: string) => {
-    return `${envAddress}/${route}`;
+  addRuleToLesson(data: AddRuleToLessonRequest): Observable<LessonResponse[]>{
+    return this.http.post<LessonResponse[]>(this.url + "/addRule" , data);
   }
 
+  removeRuleFromLesson(data: RemoveRuleFromLessonRequest): Observable<LessonResponse[]>{
+    return this.http.post<LessonResponse[]>(this.url + "/removeRule" , data);
+  }
 
+  finishedLesson(lessonId: number, userId: string){
+    return this.http.post(this.url + "/finished", {userId: userId, lessonId: lessonId});
+  }
 }

@@ -33,17 +33,22 @@ namespace LanguageAppBackEnd.Controllers
             return Ok( await _context.Users.ToListAsync());
         }
 
-        [HttpGet("students")]
-        public async Task<ActionResult<List<User>>> GetAllStudents()
+        [HttpPost("students")]
+        public async Task<ActionResult<List<User>>> GetAllStudents(string[] filterIds = null)
         {
-            var users = await (from user in _context.Users
+            var users = (from user in _context.Users
                                join userRole in _context.UserRoles
                                on user.Id equals userRole.UserId
                                join role in _context.Roles
                                on userRole.RoleId equals role.Id
                                where role.Name == "Student"
                                select user)
-                                 .ToListAsync();
+                                 .ToList();
+            if(filterIds != null && filterIds.Length > 0)
+            {
+                users = users.Where(x => !filterIds.Contains(x.Id)).ToList();
+            }
+
             return Ok(users);
         }
 

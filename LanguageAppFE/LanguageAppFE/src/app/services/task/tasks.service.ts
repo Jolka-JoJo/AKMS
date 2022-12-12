@@ -37,12 +37,11 @@ export class TasksService {
     return this.http.post<LesssonTask>(this.url + "/addUser", data);
   }
 
+  removeUserFromTask(taskId: number, userId: string): Observable<LesssonTask>{
+    return this.http.delete<LesssonTask>(this.url + "/removeUser/" + userId + "/"+ taskId);
+  }
+
   updateLearnedLessons(taskId: number, userId: string){
     return this.http.put(this.url + "/learned/" + userId + "/"+ taskId, null);
   }
-
-  private createCompleteRoute = (route: string, envAddress: string) => {
-    return `${envAddress}/${route}`;
-  }
-
 }

@@ -19,6 +19,8 @@ namespace LanguageAppBackEnd.Models
         
         public string? taskImage { get; set; }
 
+        public int mistakesCount { get; set; } = 0;
+
         public ICollection<Answer> answers { get; set; }
 
         public virtual ICollection<LessonTaskLesson> LessonTaskLesson { get; set; }

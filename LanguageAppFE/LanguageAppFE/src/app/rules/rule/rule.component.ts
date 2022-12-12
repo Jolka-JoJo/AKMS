@@ -98,4 +98,16 @@ export class RuleComponent implements OnInit {
     });
   }
 
+  removeSavedRule(rule: Rule){
+    rule.userId = this.userId;
+      this.ruleService.removeRuleFromSaved(rule).subscribe(() =>
+        this.ruleService.getAllRules(this.userId).subscribe(res=>
+          {
+            this.rules = res;
+            this.dataSource = new MatTableDataSource<Rule>(this.rules);
+            this.dataSource.paginator = this.paginator;
+          })
+      );
+  }
+
 }

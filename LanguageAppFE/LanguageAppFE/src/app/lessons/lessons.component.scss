@@ -34,6 +34,9 @@
 
 table {
   width: 100%;
+    td.mat-cell{
+      padding-top: 10px;
+    }
     .lesson-table-actions{
       display: flex;
       justify-content: flex-end;

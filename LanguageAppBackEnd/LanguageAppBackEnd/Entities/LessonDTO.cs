@@ -10,6 +10,7 @@ namespace LanguageAppBackEnd.Entities
         public string? lessonTitle { get; set; }
         public DateTime? createdDate { get; set; }
         public List<lessonTask>? tasks  { get; set; }
+        public List<RuleDTO>? rules  { get; set; }
         public User[]? students  { get; set; }
     }
 }

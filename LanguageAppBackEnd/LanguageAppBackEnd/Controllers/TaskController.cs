@@ -32,7 +32,6 @@ namespace LanguageAppBackEnd.Controllers
         [HttpPost("tasks")]
         public async Task<ActionResult<List<lessonTask>>> GetAllTasks([FromBody] userTasksDTO data)
         {
-            //var tasks = await _context.Task.ToListAsync();
             var tasks = _context.UserTask
                 .Include(x => x.Task)
                 .Include(x => x.Task.UserTask)
@@ -40,12 +39,6 @@ namespace LanguageAppBackEnd.Controllers
                 .Select(entry => new { entry.Task, entry.learned}).ToList();
 
             var answers = _context.Answers.ToList();
-            //foreach (var answer in answers)
-            //{
-            //    var temp = tasks.Find(x => x.Task.taskId == answer.lessonTaskId).Task;
-            //    temp.answers.Add(answer);
-            //}
-            
             var filteredTasks = tasks.Where(x => !data.tasksToFilter.Contains(x.Task.taskId));
 
             return Ok(data.tasksToFilter != null && data.tasksToFilter.Length > 0 ? filteredTasks : tasks);
@@ -100,13 +93,24 @@ namespace LanguageAppBackEnd.Controllers
                 return BadRequest("Task not found.");
 
             dbTask.taskTitle = request.taskTitle;
-            dbTask.taskContent = request.taskContent;
+            dbTask.taskContent = request.taskContent == "null"? null : request.taskContent;
+            
             if (request.taskType != null) dbTask.taskType = int.Parse(request.taskType);
             if (request.file != null)
             {
+                if (dbTask.taskImage != null) await FileUploadind.DeleteFileAsync("task", id, dbTask.taskImage);
                 dbTask.taskImage = request.file.FileName;
                 await FileUploadind.SaveFileAsync("task", id, request.file);
             }
+            else
+            {
+                if(dbTask.taskImage != null)
+                {
+                    await FileUploadind.DeleteFileAsync("task", id, dbTask.taskImage);
+                    dbTask.taskImage = null;
+                }
+            }
+            
             await _context.SaveChangesAsync();
 
             return Ok(dbTask);
@@ -149,22 +153,31 @@ namespace LanguageAppBackEnd.Controllers
                 UserTask userTask = new UserTask();
                 userTask.TaskId = id;
                 userTask.UserId = request.userId;
-                _context.UserTask.Add(userTask);
+
+                if (_context.UserTask.Where(x => x.UserId == request.userId && x.TaskId == id).ToList().Count == 0)
+                {
+                    _context.UserTask.Add(userTask);
+                }
+
+
+                var dbTask = _context.Task.Find(id);
+                dbTask.mistakesCount += 1;
+
+                _context.SaveChanges();
 
             });
 
-            await _context.SaveChangesAsync();
             return Ok();
         }
 
         [HttpDelete("removeUser/{userId}/{taskId}")]
         public async Task<ActionResult<List<lessonTask>>> RemoveUserFromTask(string userId, int taskId)
         {
-            var dbTask = await _context.Task.FindAsync(taskId);
+            var dbTask = _context.UserTask.Where(x => x.UserId == userId && x.TaskId == taskId).First();
             if (dbTask == null)
                 return BadRequest("Task not found.");
 
-            _context.Task.Remove(dbTask);
+            _context.UserTask.Remove(dbTask);
             await _context.SaveChangesAsync();
 
             return Ok(_context.UserTask
@@ -172,21 +185,5 @@ namespace LanguageAppBackEnd.Controllers
                 .Where(entry => entry.UserId == userId)
                 .Select(entry => entry.Task).ToList());
         }
-
-        //[HttpPut("updateTaskUser")]
-        //public async Task<ActionResult<List<lessonTask>>> updateTaskUser([FromBody] userTasksDTO request)
-        //{
-        //    request.tasksIds.ToList().ForEach(id =>
-        //    {
-        //        UserTask userTask = new UserTask();
-        //        userTask.TaskId = id;
-        //        userTask.UserId = request.userId;
-        //        _context.UserTask.Add(userTask);
-
-        //    });
-
-        //    await _context.SaveChangesAsync();
-        //    return Ok();
-        //}
     }
 }

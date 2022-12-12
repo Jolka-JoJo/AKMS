@@ -18,7 +18,7 @@ export class TasksComponent implements OnInit, OnDestroy  {
   userId!: string;
   userRole!: string;
   dataSource!: MatTableDataSource<LesssonTask>;
-  displayedColumns?: string[] = ['Nr', 'Task', 'TaskContent', 'Delete'];
+  displayedColumns: string[] = ['Nr', 'Task', 'TaskContent', 'Delete'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -35,24 +35,26 @@ export class TasksComponent implements OnInit, OnDestroy  {
    this.getAllTasks();
    this.userService.isUserTeacher();
   }
+
   ngOnDestroy(): void {
-  // this.dtTrigger.unsubscribe();
   }
 
   getAllTasks(){
     this.userService.getUser().subscribe(res => {
       this.userRole = this.userService.getUserRole();
+      if(this.userRole === 'Mokytojas'){
+        this.displayedColumns = ['Nr', 'Task', 'TaskContent', 'Mistakes', 'Delete'];
+      }
+
       this.userId = res.Id;
       var data: userTasksDTO ={
         userId: res.Id
       }
       this.tasksService.getAllTasks(data).subscribe((elements)=>{
         elements.forEach(x =>{
-          if((this.userRole == "Mokinys" && !x.learned) || this.userRole == "Mokytojas"){
-            var temp:LesssonTask = x.Task;
-            temp.learned = x.learned;
-            this.lesssonTasks.push(temp);
-          }
+
+          var temp:LesssonTask = x.Task;
+          this.lesssonTasks.push(temp);
 
         });
         this.dataSource = new MatTableDataSource<LesssonTask>(this.lesssonTasks);
@@ -73,7 +75,6 @@ export class TasksComponent implements OnInit, OnDestroy  {
 
   onSubmit(formDirective: FormGroupDirective){
     var formData = new FormData();
-    const fileToUpload = this.taskAddingForm.value;
 
     formData.append('file',  this.taskAddingForm.get('file')!.value!);
     formData.append('taskTitle', this.taskAddingForm.value.taskTitle!);
@@ -103,10 +104,6 @@ export class TasksComponent implements OnInit, OnDestroy  {
     });
   }
 
-  // selectUpdate(task: LesssonTask){
-  //   this.updateTaskId = task.taskId;
-  // }
-
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -114,6 +111,15 @@ export class TasksComponent implements OnInit, OnDestroy  {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  maxMistakesCountTask(){
+    const mistakesCount: number[] = this.lesssonTasks.map(x =>x.mistakesCount);
+    if(mistakesCount.length > 0){
+      var max = mistakesCount.reduce((a, b)=>Math.max(a, b));
+      return this.lesssonTasks.find(x => x.mistakesCount === max)!.taskContent;
+    }
+    return "";
   }
 }
 

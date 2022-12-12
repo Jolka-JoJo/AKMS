@@ -1,4 +1,34 @@
 <div>
+  <div *ngIf = "lesson" class="complete-rule-card">
+    <mat-card *ngFor = "let rule of lesson.rules" class="complete-rule-card-content">
+      <mat-card-content>
+        <div class = "rule-title-row">
+          <h2>{{ rule ? rule.ruleTitle : ""}}</h2>
+          <div class="rule-actions">
+            <div class="rule-action">
+              <button type = "button" mat-raised-button color = "primary" (click)="rule.isSaved ? removeSavedRule(rule): saveRule(rule)">{{rule.isSaved ? "Pašalinti iš išsaugotų" : "Išsaugoti taisyklę"}}</button>
+            </div>
+
+            <div class="rule-action">
+              <button type = "button" mat-raised-button color = "primary" (click)="changeRuleVisibility(rule)">{{rule.visible ? "Paslėpti taisyklę" : "Rodyti taisyklę"}}</button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="rule.visible" class="pre-task-content">
+
+          <div class="task-content">
+            <div>
+              <h3>{{rule ? rule.ruleContent : ""}}</h3>
+            </div>
+            <div *ngIf="rule && rule.ruleImage">
+              <img class = "image" src="/assets/uploads/{{rule.filename}}">
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
   <div *ngIf = "lesson" class="complete-card">
     <mat-card class="complete-card-content"  [ngClass]="{'correct': correctAnswer && nextVisible, 'incorrect': !correctAnswer && nextVisible}">
       <mat-card-content class = "complete-form-content">

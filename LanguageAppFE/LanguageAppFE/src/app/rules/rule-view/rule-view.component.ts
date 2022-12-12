@@ -24,6 +24,7 @@ export class RuleViewComponent implements OnInit {
   filename?: string;
   selectedFile: any = null;
   tempFilename?: string;
+  userRole!: string;
   constructor(
     private ruleService: RuleService,
     private router: Router,
@@ -36,6 +37,10 @@ export class RuleViewComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.ruleId = params['id'];
      });
+
+    this.userService.getUser().subscribe(res =>{
+      this.userRole = res.role;
+    });
 
     this.ruleService.getRule(this.ruleId).subscribe((res: any) =>
       {

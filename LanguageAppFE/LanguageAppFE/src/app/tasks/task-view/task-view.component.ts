@@ -63,7 +63,6 @@ export class TaskViewComponent implements OnInit{
     this.tasksService.getTask(this.taskId).subscribe(res =>{
       this.task = res;
       if(this.task.taskImage) this.filename = "task_" + this.taskId + "." + this.getFileExtension(this.task.taskImage);
-
     });
   }
 
@@ -96,7 +95,9 @@ export class TaskViewComponent implements OnInit{
   updateOpen(){
     this.update = true;
     this.taskUpdatingForm.controls['taskTitle'].setValue(this.task.taskTitle);
-    this.taskUpdatingForm.controls['taskContent'].setValue(this.task.taskContent!);
+    this.taskUpdatingForm.controls['taskContent'].setValue(
+      this.task.taskContent === null || this.task.taskContent === "" ? null : this.task.taskContent!);
+    console.log("this.task.taskContent", this.task.taskContent)
     this.taskUpdatingForm.controls['taskType'].setValue(this.task.taskType ? this.task.taskType!.toString() : "");
     //this.taskUpdatingForm.controls['filename'].setValue(this.task.taskImage!);
     this.tempFilename = this.task.taskImage;

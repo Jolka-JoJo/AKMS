@@ -22,45 +22,6 @@
         </mat-card>
       </div>
       <h3>Visų pamokų sąrašas</h3>
-      <!-- <mat-card  class="lesson-card">
-        <mat-card-content>
-          <div class="all-lesson-table">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Nr</th>
-                  <th scope="col">Pamokos pavadinimas</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let lesson of lessons; let i = index">
-
-                      <th scope="row"> {{ i + 1 }} </th>
-                      <td>{{ lesson.lessonTitle }}</td>
-                      <td >
-                        <div class="lesson-table-actions">
-                          <div *ngIf = "userRole === 'Mokytojas'" class="lesson-table-action">
-                            <a mat-list-item [routerLink]="'/lessons/' + lesson.lessonId  +'/'">
-                              <mat-icon >visibility</mat-icon>
-                            </a>
-                          </div>
-                          <div *ngIf = "userRole === 'Mokinys'"class = "lesson-table-action">
-
-                              <a color="primary" mat-flat-button [routerLink]="'/lessons/' + lesson.lessonId  +'/complete/'">
-                                Spręsti užduotis
-                              </a>
-                          </div>
-                          <div *ngIf = "userRole === 'Mokytojas'" class="lesson-table-action">
-                            <a mat-list-item secondary><mat-icon  (click)="onDelete(lesson.lessonId!)">delete</mat-icon></a>
-                          </div>
-                        </div>
-                      </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </mat-card-content>
-      </mat-card> -->
       <div class="lesson-card">
           <mat-form-field class = "table-filter-input" appearance="standard">
             <mat-label>Ieškoti</mat-label>
@@ -102,7 +63,6 @@
             <!-- Row shown when there is no matching data. -->
             <tr class="mat-row" *matNoDataRow>
               <td class="mat-cell" colspan="4"> Nėra duomenų </td>
-              <!-- <td class="mat-cell" colspan="4"> Nėra duomenų "{{input.value}}"</td> -->
             </tr>
           </table>
           <mat-paginator

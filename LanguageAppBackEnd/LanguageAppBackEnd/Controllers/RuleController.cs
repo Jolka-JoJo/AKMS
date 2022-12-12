@@ -30,7 +30,7 @@ namespace LanguageAppBackEnd.Controllers
 
             if (filter != null && filter.Length > 0)
             {
-                // atfiltruot
+                res = res.Where(x => !filter.Contains(x.RuleId)).ToList();
             }
 
             return Ok(res);
@@ -98,7 +98,7 @@ namespace LanguageAppBackEnd.Controllers
 
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<WordPhrase>>> DeleteRule(int id)
+        public async Task<ActionResult> DeleteRule(int id)
         {
             var dbRule = await _context.Rules.FindAsync(id);
             if (dbRule == null)
@@ -109,6 +109,39 @@ namespace LanguageAppBackEnd.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
-    
+
+        [HttpPost("saveRule")]
+        public async Task<ActionResult> saveRule([FromBody] RuleDTO request)
+        {
+            if(request.RuleId != null)
+            {
+                UserRule userRule = new UserRule();
+                userRule.UserId = request.userId;
+                userRule.RuleId = (int)request.RuleId;
+                _context.UserRules.Add(userRule);
+                _context.SaveChanges();
+
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+        }
+
+        [HttpPost("removeRule")]
+        public async Task<ActionResult> removeRuleFromSaved([FromBody] RuleDTO request)
+        {
+            UserRule userRule = new UserRule();
+            if (request.RuleId == null || request.userId == null) return BadRequest();
+            userRule.RuleId = (int)request.RuleId;
+            userRule.UserId = request.userId;
+            _context.UserRules.Remove(userRule);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
     }
 }
+

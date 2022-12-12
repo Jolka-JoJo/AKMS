@@ -45,6 +45,7 @@ import { CategoryChoiceDialogComponent } from './dictionary/category-choice-dial
 import { TasksRepeatComponent } from './tasks/tasks-repeat/tasks-repeat.component';
 import { RuleComponent } from './rules/rule/rule.component';
 import { RuleViewComponent } from './rules/rule-view/rule-view.component';
+import { AddRuleToLessonDialogComponent } from './rules/add-rule-to-lesson-dialog/add-rule-to-lesson-dialog.component';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -67,7 +68,8 @@ export function tokenGetter() {
     CategoryChoiceDialogComponent,
     TasksRepeatComponent,
     RuleComponent,
-    RuleViewComponent
+    RuleViewComponent,
+    AddRuleToLessonDialogComponent
   ],
   imports: [
     BrowserModule,

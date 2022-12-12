@@ -19,9 +19,10 @@ export class AddStudentToLessonDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private taskService: TasksService,
     private userService: UserService) {
-      this.userService.getAllStudents().subscribe(res =>{
+      this.userService.getAllStudents(this.data.idsToFilter).subscribe(res =>{
         this.users = res;
         this.dataSource = new MatTableDataSource(this.users);
+        this.dataSource.paginator = this.paginator;
       })
     }
 

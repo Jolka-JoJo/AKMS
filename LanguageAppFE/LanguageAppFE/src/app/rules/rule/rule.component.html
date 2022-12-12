@@ -62,11 +62,14 @@
                 <th mat-header-cell *matHeaderCellDef></th>
                   <td mat-cell *matCellDef="let row" >
                     <div class="task-table-actions">
-                      <div *ngIf = "userRole === 'Mokytojas'" class="task-table-action">
+                      <div class="task-table-action">
                         <a mat-list-item [routerLink]="'/rule/' + row.RuleId  +'/'">  <mat-icon >visibility</mat-icon> </a>
                       </div>
                       <div *ngIf = "userRole === 'Mokytojas'" class="task-table-action">
                         <a mat-list-item secondary><mat-icon  (click)="onDelete(row.RuleId!)">delete</mat-icon></a>
+                      </div>
+                      <div *ngIf = "userRole === 'Mokinys'" class="task-table-action">
+                        <button type = "button" mat-raised-button color = "primary" (click)="removeSavedRule(row)">Pašalinti iš išsaugotų</button>
                       </div>
                     </div>
                   </td>

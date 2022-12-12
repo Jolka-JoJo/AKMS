@@ -1,3 +1,4 @@
+import { Rule } from './rule';
 import { user } from '../models/task/user.module';
 import { LesssonTask } from './../models/task/task.module';
 
@@ -16,6 +17,7 @@ export interface LessonResponse{
   taskId?: number;
   tasks?: LesssonTask[];
   students?: user[];
+  rules?: Rule[];
 }
 
 export interface AddTaskToLessonRequest{
@@ -48,4 +50,14 @@ export const LessonStatusTranslated ={
   1 : "Juodraštis",
   2 : "Paskelbta",
   3 : "Paslėpta"
+}
+
+export interface AddRuleToLessonRequest{
+  lessonId: number,
+  rulesIds: number[]
+}
+
+export interface RemoveRuleFromLessonRequest{
+  lessonId: number,
+  ruleId: number
 }

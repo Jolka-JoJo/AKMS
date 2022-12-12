@@ -49,17 +49,17 @@ export class AddTaskToLessonDialogComponent implements OnInit {
           this.tasks.push(x.Task);
         })
         this.dataSource = new MatTableDataSource(this.tasks);
+        this.dataSource.paginator = this.paginator;
       });
     });
   }
 
-    displayedColumns: string[] = ['select', 'Nr', 'Task', "TaskContent"];
-    tasks: LesssonTask[] = [];
+  displayedColumns: string[] = ['select', 'Nr', 'Task', "TaskContent", 'Mistakes'];
+  tasks: LesssonTask[] = [];
 
-    dataSource!: MatTableDataSource<LesssonTask>;
-    selection = new SelectionModel<LesssonTask>(true, []);
-    @ViewChild(MatPaginator) paginator!: MatPaginator;
-    @ViewChild(MatSort) sort!: MatSort;
+  dataSource!: MatTableDataSource<LesssonTask>;
+  selection = new SelectionModel<LesssonTask>(true, []);
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngOnInit(): void {
   }

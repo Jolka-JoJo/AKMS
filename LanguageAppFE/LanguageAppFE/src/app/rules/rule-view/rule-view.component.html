@@ -4,7 +4,7 @@
       <mat-card-content class = "task-form-content">
         <div class = "task-title-row">
           <h2>{{ rule ? rule.ruleTitle : ""}}</h2>
-          <div class="task-table-actions">
+          <div *ngIf = "userRole === 'Mokytojas'" class="task-table-actions">
             <div class="task-table-action">
             <a mat-list-item> <mat-icon (click)="updateOpen()" class = "task-card-edit">edit</mat-icon> </a>
             </div>

@@ -1,5 +1,6 @@
+import { AddRuleToLessonDialogComponent } from './../../rules/add-rule-to-lesson-dialog/add-rule-to-lesson-dialog.component';
 import { UserService } from 'src/app/services/user/user.service';
-import { AddTaskToLessonRequest, AddUserToLessonRequest, LessonStatus, LessonStatusTranslated, RemoveTaskFromLessonRequest, RemoveUserFromLessonRequest } from './../../interfaces/lesson';
+import { AddRuleToLessonRequest, AddTaskToLessonRequest, AddUserToLessonRequest, LessonStatus, LessonStatusTranslated, RemoveRuleFromLessonRequest, RemoveTaskFromLessonRequest, RemoveUserFromLessonRequest } from './../../interfaces/lesson';
 import { LessonsService } from './../../services/lesson/lessons.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,6 +14,8 @@ import { LesssonTask } from 'src/app/models/task/task.module';
 import { AddStudentToLessonDialogComponent } from 'src/app/students/add-student-to-lesson-dialog/add-student-to-lesson-dialog.component';
 import { user } from 'src/app/models/task/user.module';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { Rule } from 'src/app/interfaces/rule';
+import { RuleService } from 'src/app/services/rule/rule.service';
 
 @Component({
   selector: 'app-lesson-view',
@@ -25,25 +28,28 @@ export class LessonViewComponent implements OnInit {
     private route: ActivatedRoute,
     private lessonService: LessonsService,
     private tasksService: TasksService,
+    private ruleService: RuleService,
     private formBuilder: FormBuilder,
     public dialog: MatDialog,
     public userService: UserService) {
       this.userRole = this.userService.getUserRole();
-      //this.displayedColumns = ['Nr', 'Task'];
-     }
+    }
 
     lessonId!: number;
     lesson!: LessonResponse;
     update: boolean = false;
     statuses = LessonStatusTranslated;
     status!: string;
-    dataSource!: MatTableDataSource<LesssonTask>;
     @ViewChild(MatPaginator) paginator1!: MatPaginator;
     @ViewChild(MatPaginator) paginator2!: MatPaginator;
+    @ViewChild(MatPaginator) paginator3!: MatPaginator;
+    dataSourceTasks?: MatTableDataSource<LesssonTask>;
     dataSourceStudent?: MatTableDataSource<user>;
+    dataSourceRule?: MatTableDataSource<Rule>;
     pageEvent?: PageEvent;
-    displayedColumns?: string[] = ['Nr', 'Task', 'TaskContent', 'Delete'];
-    displayedColumnsStudent?: string[] = ['Nr', 'Student', 'Delete'];
+    displayedColumns?: string[] = ['Nr', 'Task', 'TaskContent', 'Mistakes', 'Delete'];
+    displayedColumnsStudent?: string[] = ['Nr', 'Student', 'Status', 'Delete'];
+    displayedColumnsRules?: string[] = ['Nr', 'Rule', 'RuleContent', 'Delete'];
     lessonStudents?: user[];
     userRole!: string;
 
@@ -58,8 +64,10 @@ export class LessonViewComponent implements OnInit {
      this.getLesson();
      this.lessonService.getLessonStudents(this.lessonId).subscribe(res =>
       {
+        console.log( res)
         this.lessonStudents = res;
         this.dataSourceStudent = new MatTableDataSource(this.lessonStudents);
+        this.dataSourceStudent.paginator = this.paginator2;
        // this.dataSourceStudent = new MatTableDataSource<LessonResponse>(this.lessonStudents);;
       });
   }
@@ -69,8 +77,12 @@ export class LessonViewComponent implements OnInit {
       {
         this.lesson = response;
        // this.dataSource = new MatTableDataSource(this.lesson.tasks);
-        this.dataSource = new MatTableDataSource<LesssonTask>(this.lesson.tasks);
-        this.dataSource.paginator = this.paginator1;
+        this.dataSourceTasks = new MatTableDataSource<LesssonTask>(this.lesson.tasks);
+        this.dataSourceTasks.paginator = this.paginator1;
+        console.log("this.lesson", this.lesson);
+
+        this.dataSourceRule = new MatTableDataSource(this.lesson.rules);
+        this.dataSourceRule.paginator = this.paginator3;
       });
   }
 
@@ -126,9 +138,8 @@ export class LessonViewComponent implements OnInit {
     });
   }
   openStudentDialog(){
-    var idsToFilter: number[] = []
-    //reikės jau pridėtus userius atfiltruoti
-    //this.lesson.tasks!.forEach(x => idsToFilter.push(x.taskId!));
+    var idsToFilter: string[] = [];
+    this.lessonStudents!.forEach(x => idsToFilter.push(x.Id!));
     const dialogRef = this.dialog.open(AddStudentToLessonDialogComponent, {
       data: {
         idsToFilter: idsToFilter
@@ -141,7 +152,7 @@ export class LessonViewComponent implements OnInit {
           usersIds: result.map((value:any) => value.Id)
         };
        this.lessonService.addUsersToLesson(data).subscribe(
-        lessonRes =>{
+        () =>{
          this.lessonService.getLessonStudents(this.lessonId)
           .subscribe(res => {
             this.lessonStudents = res;
@@ -152,12 +163,12 @@ export class LessonViewComponent implements OnInit {
     });
   }
 
-  applyFilter(event: Event) {
+  applyFilter(dataSource: any, event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    dataSource!.filter = filterValue.trim().toLowerCase();
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+    if (dataSource!.paginator) {
+      dataSource!.paginator.firstPage();
     }
   }
 
@@ -183,4 +194,42 @@ export class LessonViewComponent implements OnInit {
       }))
   }
 
+  openRulesDialog(){
+    var idsToFilter: number[] = []
+    this.lesson.rules!.forEach(x => idsToFilter.push(x.RuleId!));
+    const dialogRef = this.dialog.open(AddRuleToLessonDialogComponent, {
+      data: {
+        idsToFilter: idsToFilter
+      },
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result && result.length > 0){
+        console.log(result);
+        var request: AddRuleToLessonRequest = {
+          lessonId: this.lessonId,
+          rulesIds: result.map((x:any) => x.RuleId)
+        }
+        this.lessonService.addRuleToLesson(request).subscribe( () =>
+           this.getLesson()
+        );
+      }
+    });
+  }
+
+  removeRule(ruleId: number){
+    var request:RemoveRuleFromLessonRequest = {
+      ruleId: ruleId,
+      lessonId: this.lessonId
+    }
+    this.lessonService.removeRuleFromLesson(request).subscribe(() =>
+      this.lessonService.getLesson(this.lessonId).subscribe(res => {
+        this.lesson = res;
+        this.dataSourceRule = new MatTableDataSource(this.lesson.rules);
+        this.dataSourceRule.paginator = this.paginator3;
+      }))
+  }
+
+  completedCount(){
+    return this.lessonStudents!.filter(x => x.status === 2).length;
+  }
 }

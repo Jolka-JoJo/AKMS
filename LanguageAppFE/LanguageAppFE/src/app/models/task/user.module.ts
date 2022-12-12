@@ -5,6 +5,6 @@ export interface user{
   LastName: string
   email: string,
   password?: string,
-  position?: number
-
+  position?: number,
+  status?: number
 }

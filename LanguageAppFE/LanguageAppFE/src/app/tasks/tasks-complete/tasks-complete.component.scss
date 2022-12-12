@@ -60,3 +60,27 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.rule-title-row{
+  display: flex;
+  justify-content: space-between;
+  .rule-actions{
+    display: flex;
+    .rule-action{
+      margin-left: 5px;
+    }
+  }
+
+}
+
+.complete-rule-card{
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  .complete-rule-card-content{
+    width: 800px;
+    .image{
+      width: 700px;
+    }
+  }
+}
