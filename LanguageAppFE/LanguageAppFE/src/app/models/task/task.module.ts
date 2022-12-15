@@ -13,9 +13,7 @@ export interface LesssonTask{
 }
 
 export const taskType = {
-  1: "Tekstinis atsakymas",
-  2: "Vieno pasirinkimo atsakymas",
-  3: "Daug pasirinkimų atsakymas"
+  1: "Tekstinis atsakymas"
 }
 
 export interface userTasksDTO{

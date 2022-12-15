@@ -64,11 +64,9 @@ export class LessonViewComponent implements OnInit {
      this.getLesson();
      this.lessonService.getLessonStudents(this.lessonId).subscribe(res =>
       {
-        console.log( res)
         this.lessonStudents = res;
         this.dataSourceStudent = new MatTableDataSource(this.lessonStudents);
         this.dataSourceStudent.paginator = this.paginator2;
-       // this.dataSourceStudent = new MatTableDataSource<LessonResponse>(this.lessonStudents);;
       });
   }
 
@@ -76,10 +74,8 @@ export class LessonViewComponent implements OnInit {
     this.lessonService.getLesson(this.lessonId).subscribe(response =>
       {
         this.lesson = response;
-       // this.dataSource = new MatTableDataSource(this.lesson.tasks);
         this.dataSourceTasks = new MatTableDataSource<LesssonTask>(this.lesson.tasks);
         this.dataSourceTasks.paginator = this.paginator1;
-        console.log("this.lesson", this.lesson);
 
         this.dataSourceRule = new MatTableDataSource(this.lesson.rules);
         this.dataSourceRule.paginator = this.paginator3;
@@ -204,7 +200,6 @@ export class LessonViewComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if(result && result.length > 0){
-        console.log(result);
         var request: AddRuleToLessonRequest = {
           lessonId: this.lessonId,
           rulesIds: result.map((x:any) => x.RuleId)

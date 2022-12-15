@@ -51,14 +51,13 @@ namespace LanguageAppBackEnd.Controllers
                                   on task.taskId equals lessonTasks.TaskId
                                   join answers in _context.Answers 
                                   on task.taskId equals answers.lessonTaskId
-                                  where lessonTasks.LessonId == id
+                                  where lessonTasks.LessonId == id 
                                   select new
                                   {
                                       task,
                                       answers
                                   })
                                  .ToList();
-            //Thread.Sleep(1000);
             lesson.tasks = new List<lessonTask>();
 
             var DBRules = (from rule in _context.Rules
@@ -76,15 +75,13 @@ namespace LanguageAppBackEnd.Controllers
                                  })
                                  .ToList();
 
-            //lesson.rules = DBRules;
             lesson.rules = DBRules;
 
             if (lesson.rules.Count() > 0 && userId != "0")
             {
                 foreach (var rule in lesson.rules)
                 {
-                    //userId atsitemt
-                   var temp =  _context.UserRules.Where(x => x.UserId == userId && x.RuleId == rule.RuleId);
+                    var temp =  _context.UserRules.Where(x => x.UserId == userId && x.RuleId == rule.RuleId);
                     if (temp != null) rule.isSaved = true;
                 }
             }
@@ -92,6 +89,7 @@ namespace LanguageAppBackEnd.Controllers
             foreach (var values in data)
             {
                 lessonTask temp = values.task;
+                if (lesson.tasks.Find(x => x.taskId == values.task.taskId) != null) continue;
                 temp.answers.Add(values.answers);
                 lesson.tasks.Add(temp);
                 

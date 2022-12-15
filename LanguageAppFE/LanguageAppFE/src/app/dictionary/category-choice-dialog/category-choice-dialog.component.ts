@@ -34,9 +34,6 @@ export class CategoryChoiceDialogComponent implements OnInit {
     this.dialogRef.close(this.selection.selected);
   }
 
-  // onCancel(): void {
-  //   this.dialogRef.close();
-  // }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();

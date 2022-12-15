@@ -38,9 +38,7 @@ export class RuleViewComponent implements OnInit {
       this.ruleId = params['id'];
      });
 
-    this.userService.getUser().subscribe(res =>{
-      this.userRole = res.role;
-    });
+    this.userRole =  this.userService.getUserRole();
 
     this.ruleService.getRule(this.ruleId).subscribe((res: any) =>
       {

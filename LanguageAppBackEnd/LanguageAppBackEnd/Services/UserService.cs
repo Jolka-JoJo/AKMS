@@ -18,7 +18,6 @@ namespace LanguageAppBackEnd.Services
         {
             var a = _context.Users.Where(x => x.UserName == username && x.Password == password).ToListAsync();
             a.Wait();
-            //return username.Equals("admin") && password.Equals("Pa$$WoRd");
             return a.Result.Count != 0 ? true : false;
         }
     }

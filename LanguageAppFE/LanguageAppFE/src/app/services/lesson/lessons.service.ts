@@ -19,7 +19,6 @@ export class LessonsService {
   }
 
   getLesson(id: number, userId: string = "0"): Observable<LessonResponse> {
-    console.log("ID", userId);
     return this.http.get<LessonResponse>(this.url + "/" + id + "/" + userId);
   }
 

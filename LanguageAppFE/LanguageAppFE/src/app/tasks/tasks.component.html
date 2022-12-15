@@ -45,7 +45,7 @@
         </mat-card>
       </div>
       <h3>Visų užduočių sąrašas</h3>
-      <p>Daugiausia klaidų padaryta užduotyje: {{maxMistakesCountTask()}}</p>
+      <p *ngIf = "userRole === 'Mokytojas'" >Daugiausia klaidų padaryta užduotyje: {{maxMistakesCountTask()}}</p>
       <div class="mat-elevation-z8" class="task-card">
 
           <mat-form-field class = "table-filter-input" appearance="standard">
@@ -89,9 +89,6 @@
                       </a>
                     </div>
                   </div>
-                  <!-- <div class = "task-delete">
-                    <mat-icon class = "task-delete-icon" (click)="onDelete(row.taskId)">close</mat-icon>
-                  </div> -->
                 </td>
             </ng-container>
 
@@ -101,7 +98,6 @@
             <!-- Row shown when there is no matching data. -->
             <tr class="mat-row" *matNoDataRow>
               <td class="mat-cell" colspan="4"> Nėra duomenų </td>
-              <!-- <td class="mat-cell" colspan="4"> Nėra duomenų "{{input.value}}"</td> -->
             </tr>
           </table>
           <mat-paginator

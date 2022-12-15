@@ -56,7 +56,6 @@ export class TasksCompleteComponent implements OnInit {
 
         });
         this.lesson.tasks!.forEach((value, i) => i!=0 ? value.isHidden = true : value.isHidden = false);
-        console.log(" this.lesson.tasks",  this.lesson.tasks);
 
         this.progressAdd = 100 / this.lesson.tasks!.length;
       });
@@ -129,8 +128,7 @@ export class TasksCompleteComponent implements OnInit {
     this.userService.getUser().subscribe(res =>{
       rule.userId = res.Id;
       this.ruleService.saveRule(rule).subscribe(() =>
-        {rule.isSaved = true
-        console.log("rule", rule);}
+        rule.isSaved = true
       );
     });
   }

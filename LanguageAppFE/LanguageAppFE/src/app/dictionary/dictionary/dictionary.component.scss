@@ -82,13 +82,11 @@ table {
 @media only screen and (max-width: 600px) {
   .dictionary-card{
     width: 350px;
-    //max-width: calc(100% - 20px);
     margin: auto;
     padding: 0 10px;
   }
   .all-words{
     width: 350px;
-    //max-width: calc(100% - 20px);
     margin: auto;
   }
 }

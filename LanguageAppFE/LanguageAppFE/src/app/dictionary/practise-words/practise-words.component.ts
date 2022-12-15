@@ -43,19 +43,11 @@ export class PractiseWordsComponent implements OnInit {
         this.categories = data;
         this.chooseCategory();
       });
-      // this.dictionaryService.getAllWordsPhrases(this.userId).subscribe(res =>{
-      //   this.words = res;
-      //   this.wordsNotDynamic = res;
-      //   this.words.map(word => word.isHidden = true);
-      //   if(this.words[0].isHidden) this.words[0].isHidden = false;
-      //   this.progressAdd = 100 / this.words.length;
-      // });
     });
   }
 
   next(i: number){
 
-    //this.correctAnswer = false;
     this.nextVisible = false;
     this.correctAnswer = false;
 

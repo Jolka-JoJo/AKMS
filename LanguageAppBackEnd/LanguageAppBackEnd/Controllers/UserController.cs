@@ -52,20 +52,10 @@ namespace LanguageAppBackEnd.Controllers
             return Ok(users);
         }
 
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<User>> GetUser(string id)
-        //{
-        //    var user = await _context.Users.FindAsync(id);
-        //    if (user == null)
-        //        return BadRequest("User not found.");
-        //    return Ok(user);
-        //}
-
         [HttpGet("{username}")]
         public async Task<ActionResult<User>> GetByUsername(string username)
         {
             var user = _context.Users.Where(x => x.UserName == username);
-           // var user = await _context.Users.FindAsync(username);
             if (user == null)
                 return BadRequest("User not found.");
             return Ok(user.First());

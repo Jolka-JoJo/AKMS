@@ -6,7 +6,6 @@ namespace LanguageAppBackEnd.Models
     public class UserRegistrationModel
     {
         public string FirstName { get; set; }
-        //public string Role { get; set; }
         public string LastName { get; set; }
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress]

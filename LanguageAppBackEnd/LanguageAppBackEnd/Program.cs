@@ -61,7 +61,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 
 builder.Services.AddAutoMapper(typeof(Program));
-//builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<JwtHandler>();
 
 var allowOrigins = "allowOrigins";
@@ -70,7 +69,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: allowOrigins,
                       policy =>
                       {
-                          policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();//.WithOrigins("http://localhost:4200");
+                          policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
                       });
 });
 var app = builder.Build();
@@ -84,7 +83,6 @@ if (app.Environment.IsDevelopment())
 }
 
 
-//app.UseHttpsRedirection();
 app.UseCors(allowOrigins);
 
 app.UseRouting();

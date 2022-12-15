@@ -86,7 +86,6 @@ table {
 @media only screen and (max-width: 600px) {
   .lesson-view-content {
     width: 350px;
-    //max-width: calc(100% - 20px);
     margin: auto;
     padding: 0 10px;
   }
@@ -96,8 +95,6 @@ table {
   .lesson-view-content{
     width: 1000px;
     max-width: calc(100% - 20px);
-    //margin: 0 auto;
-    //padding: 0 10px;
   }
 }
 

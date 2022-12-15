@@ -6,7 +6,7 @@
         <div class = "lesson-title-row">
           <div>
             <h2>{{ lesson ? lesson.lessonTitle : ""}}</h2>
-            <h4 *ngIf="this.lessonStudents!.length > 0">Iš viso pamoką atliko {{completedCount()}} iš {{this.lessonStudents!.length}}</h4>
+            <h4 *ngIf="this.lessonStudents && this.lessonStudents!.length > 0">Iš viso pamoką atliko {{completedCount()}} iš {{this.lessonStudents!.length}}</h4>
           </div>
 
           <div *ngIf = "userRole === 'Mokytojas'" class="lesson-table-actions">

@@ -26,12 +26,6 @@ export class DictionaryComponent implements OnInit {
     newCategories: this.formBuilder.array([])
   });
 
-  // createCategoryGroup(categories: category): FormGroup {
-  //   return this.formBuilder.group({
-  //     ...categories
-  //   });
-  // }
-
   constructor(
     private userService: UserService,
     private dictionaryService: DictionaryService,
@@ -181,16 +175,4 @@ export class DictionaryComponent implements OnInit {
     formDirective.resetForm();
     this.form.reset();
   }
-
-  // chooseCategory(){
-  //   const dialogRef = this.dialog.open(CategoryChoiceDialogComponent, {
-  //     data: {
-  //       categories: this.categories
-  //     },
-  //   });
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     console.log(result);
-
-  //   });
-  // }
 }
