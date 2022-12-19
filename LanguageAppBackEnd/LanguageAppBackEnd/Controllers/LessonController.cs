@@ -81,8 +81,11 @@ namespace LanguageAppBackEnd.Controllers
             {
                 foreach (var rule in lesson.rules)
                 {
-                    var temp =  _context.UserRules.Where(x => x.UserId == userId && x.RuleId == rule.RuleId);
-                    if (temp != null) rule.isSaved = true;
+                    var temp =  _context.UserRules.Where(x => x.UserId == userId && x.RuleId == rule.RuleId).ToList();
+                    if (temp.Count() > 0) 
+                    { 
+                        rule.isSaved = true; 
+                    }
                 }
             }
 

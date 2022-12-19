@@ -50,6 +50,7 @@ export class TasksCompleteComponent implements OnInit {
       this.lessonService.getLesson(this.lessonId, this.userId).subscribe(response =>
       {
         this.lesson = response;
+        console.log(response)
         this.lesson.rules!.forEach(x => {
           x.visible = false;
           if(x.ruleImage) x.filename = "rule_" + x.RuleId + "." + this.getFileExtension(x.ruleImage);
